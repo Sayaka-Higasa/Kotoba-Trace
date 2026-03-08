@@ -10,10 +10,14 @@
             <h2>Kotoba Trace</h2>
         </header>
 
-        <main>
+     <main>
         <h1>ことばを記録する</h1>
 
-        <form>
+        <form method= "POST">
+            {% csrf_token %}
+
+            <label for= "word">記録することば</label>
+            <br>
             <textarea name= "word" 
             style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px;">
 
@@ -40,7 +44,7 @@
 
             <label for= "memo">メモ（公開設定にしても公開されません）</label>
             <br>
-            <textarea name= "word" 
+            <textarea name= "memo" 
             style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px;">
 
             </textarea>
@@ -59,12 +63,10 @@
 
             <p>※チェックを外すと非公開となります。</p>
 
-            <br>
-            <br>
-            <br>
-           
+            <br><br><br>
 
-
-
+            <button>保存</button>
+        </form>
+     </main>
     </body>
 </html>
