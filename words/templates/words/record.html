@@ -14,12 +14,55 @@
         <h1>ことばを記録する</h1>
 
         <form>
-            <textarea name= "word"></textarea>
+            <textarea name= "word" 
+            style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px;">
+
+            </textarea>
             <br>
 
-            <label for= "source_type">出典:</label>
-            <input type= "text" id= "source_type" name= "sourcetype">
+            <label for= "source_type">出典(本・音楽・日常 など)</label>
+            <br>
+            <input type= "text" id= "source_type" name= "source_type"
+            style= "width:100% ; padding:10px ; font-size:16px ;">
+            <br>
 
+            <label for= "source_title">作品名、曲名</label>
+            <br>
+            <input type="text" id= "source_title" name= "source_title" 
+            style= "width:100% ; padding:10px ; font-size:16px ;">
+            <br>
+
+            <label for= "source_creator">著者、アーティスト</label>
+            <br>
+            <input type="text" id= "source_creator" name= "source_creator" 
+            style= "width:100% ; padding:10px ; font-size:16px ;">
+            <br>
+
+            <label for= "memo">メモ（公開設定にしても公開されません）</label>
+            <br>
+            <textarea name= "word" 
+            style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px;">
+
+            </textarea>
+            <br>
+
+            <label for= "tags">タグ</label>
+            <br>
+             <input type="text" id= "tags" name= "tags" placeholder= "#夜 #迷ったとき" 
+             style= "width:100% ; padding:10px ; font-size:16px ;">
+             <br>
+             <br>
+             
+            <input type="checkbox" id= "is_public" name= "is_public">
+            <label for= "is_public"> 公開する</label>
+            <br>
+
+            <p>※チェックを外すと非公開となります。</p>
+
+            <br>
+            <br>
+            <br>
+           
 
 
 
