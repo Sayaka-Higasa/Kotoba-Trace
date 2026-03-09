@@ -22,3 +22,7 @@ def word_record(request):
 
         return render(request, "words/record.html", {"message": "保存が完了しました！"})
     return render(request , "words/record.html")
+
+def word_list(request):
+    words = Word.objects.all()
+    return render (request, "words/list.html" , {"words" : words})
