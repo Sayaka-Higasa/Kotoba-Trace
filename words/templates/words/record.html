@@ -57,13 +57,16 @@
              <br>
              <br>
              
-            <input type="checkbox" id= "is_public" name= "is_public">
+            <input type="checkbox" id= "is_public" name= "is_public" checked>
             <label for= "is_public"> 公開する</label>
             <br>
 
             <p>※チェックを外すと非公開となります。</p>
 
             <br><br><br>
+            {% if message %}
+                <p style ="color : green;">{{message}}</p>
+            {% endif %}
 
             <button>保存</button>
         </form>
