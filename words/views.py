@@ -10,3 +10,4 @@ def word_record(request):
 def word_record(request):
     if request.method == "POST":
         return render(request, "words/record.html", {"message": "保存が完了しました！"})
+    return render(request , "words/record.html")
