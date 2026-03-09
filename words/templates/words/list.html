@@ -5,6 +5,22 @@
         <title>ことば一覧 </title>       
     </head>
     <body>
-        <h1>words_listページです</h1>
+         <header>
+            <h2>Kotoba Trace</h2>
+         </header>
+         <p>現在の登録件数: {{ words.count }}</p>
+
+        <main>
+            {% for word in words %}
+            <p>{{ word.content}}</p>
+            <br>
+            <label>
+            {{word.source_type}}
+            <input type="checkbox" {% if word.is_public %}checked="checked"{% endif %}>
+            公開する
+            </label>
+            
+            {%endfor%}
+        </main>
     </body>
 </html>
