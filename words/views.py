@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from. models import Word
 
-# Create your views here.
+# 一覧ページ閲覧リクエストがきたら、表示できる形に変換して返す
 def word_list(request):
     return render(request, "words/list.html")
 
+#記録ページ閲覧リクエストがきたら、表示できる形に変換して返す
 def word_record(request):
     return render(request, "words/record.html")
 
+#記録ページで入力した情報を保存
 def word_record(request):
     if request.method == "POST":
         Word.objects.create(
@@ -23,6 +25,7 @@ def word_record(request):
         return render(request, "words/record.html", {"message": "保存が完了しました！"})
     return render(request , "words/record.html")
 
+#記録した言葉を一覧ページに表示
 def word_list(request):
     words = Word.objects.all()
     return render (request, "words/list.html" , {"words" : words})
