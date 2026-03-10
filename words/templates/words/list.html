@@ -14,14 +14,15 @@
 
         <main>
             {% for word in words %}
-            <p>{{ word.content}}</p>
-            <br>
-            <label>
-            {{word.source_type}}
-            <input type="checkbox" {% if word.is_public %}checked="checked"{% endif %}>
-            公開する
-            </label>
-            
+                <div class = "word_card">
+                    <p>{{ word.content}}</p>
+                        <br>
+                        <label>
+                        {{word.source_type}}
+                        <input type="checkbox" {% if word.is_public %}checked="checked"{% endif %}>
+                        公開する
+                    </label>
+                </div>
             {%endfor%}
         </main>
     </body>
