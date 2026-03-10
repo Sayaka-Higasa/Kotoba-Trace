@@ -1,0 +1,12 @@
+/* 枠線と角丸く*/
+.word_card { 
+    border: 1px solid black;
+    border-radius: 12px ;
+
+/* 文字と枠の隙間 */
+    padding: 20px;
+
+ /* カードとカードの間の隙間 */
+    margin-bottom: 20px
+}
+
