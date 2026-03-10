@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render , get_object_or_404
 from. models import Word
+
 
 # 一覧ページ閲覧リクエストがきたら、表示できる形に変換して返す
 def word_list(request):
@@ -29,3 +30,8 @@ def word_record(request):
 def word_list(request):
     words = Word.objects.all()
     return render (request, "words/list.html" , {"words" : words})
+
+#言葉一覧で言葉をクリックしたときに詳細を返す
+def word_detail(request , word_id):
+    word = get_object_or_404 (Word , pk = word_id)
+    return render (request , "words/detail.html" , {"word" : word })
