@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset= "UTF-8">
+        <title>ことば詳細 </title>       
+    </head>
+
+    <body>
+        
+        <header>
+            <h2>Kotoba Trace</h2>
+        </header>
+
+     <main>
+        <dif>
+            <h2>ことば</h2>
+            <p>{{word.content}} </p>
+
+             <p>{% if word.is_public%}
+                ☑公開
+                {% else %}
+                ☐公開
+                {% endif%}
+            <br>
+            <h3>出典</h3>
+            <p>{{word.source_type}}</p>
+            <br>
+            <h3>タイトル</h3>
+            <p>{{word.source_title}} 
+            <br>
+            <h3>著者・アーティスト</h3>
+           <p>{{word.source_creator}}</p>
+            <br>
+            <br>
+            <h3>メモ</h3>
+            <p>{{word.memo}}</p>
+            <br>
+            <br>
+            <h3>タグ</h3>
+            <p>{{word.tags}} </p>
+            <br>
+            <br>
+            <br>
+             
+           
+        </dif>
+
+            <br><br><br>
+        
+     </main>
+    </body>
+</html>
