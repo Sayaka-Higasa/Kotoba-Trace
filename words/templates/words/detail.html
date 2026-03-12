@@ -12,7 +12,7 @@
         </header>
 
      <main>
-        <dif>
+        <div>
             <h2>ことば</h2>
             <p>{{word.content}} </p>
 
@@ -37,13 +37,19 @@
             <br>
             <br>
             <h3>タグ</h3>
-            <p>{{word.tags}} </p>
+            <p>
+            {% for tag in word.tags.all %}
+                <span>{{ tag }}</span>
+            {% empty %}
+                <span>タグなし</span>
+            {% endfor %}
+            </p>
             <br>
             <br>
             <br>
              
            
-        </dif>
+        </div>
 
             <br><br><br>
         
