@@ -1,5 +1,6 @@
-from django.shortcuts import render , get_object_or_404
+from django.shortcuts import render , get_object_or_404, redirect
 from. models import Word , Tag
+from .forms import WordForm
 
 
 # 一覧ページ閲覧リクエストがきたら、表示できる形に変換して返す
@@ -48,4 +49,14 @@ def word_detail(request , word_id):
 #言葉詳細で編集ボタン押したときに編集画面を返す
 def word_edit(request , word_id):
     word = get_object_or_404(Word, id = word_id)
-    return render (request, "words/word_edit.html" , {"word" : word})
+   
+    if request.method == "POST":
+        form = WordForm(request.POST, instance=word)
+        if form.is_valid():
+            form.save()
+            return redirect("words:word_detail" , word_id = word.id)
+    else:
+        form = WordForm(instance=word)
+        tags_str = " ".join([tag.name for tag in word.tags.all()])
+
+        return render(request, "words/edit.html" , {"form": form, "tags_str": tags_str})
