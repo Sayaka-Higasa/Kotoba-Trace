@@ -1,5 +1,5 @@
 from django.shortcuts import render , get_object_or_404
-from. models import Word
+from. models import Word , Tag
 
 
 # 一覧ページ閲覧リクエストがきたら、表示できる形に変換して返す
@@ -13,7 +13,7 @@ def word_record(request):
 #記録ページで入力した情報を保存
 def word_record(request):
     if request.method == "POST":
-        Word.objects.create(
+       word = Word.objects.create(
             user = request.user,
             content = request.POST.get("content"),
             source_type = request.POST.get("source_type"),
@@ -22,9 +22,18 @@ def word_record(request):
             memo = request.POST.get("memo"),
             is_public = request.POST.get("is_public") =="on"
         )
+       
+       tags_text = request.POST.get("tags")
 
-        return render(request, "words/record.html", {"message": "保存が完了しました！"})
-    return render(request , "words/record.html")
+       if tags_text:
+           tags = tags_text.split()
+           
+           for tag_name in tags:
+               tag, created = Tag.objects.get_or_create (name = tag_name)
+               word.tags.add (tag)
+
+    return render(request, "words/record.html", {"message": "保存が完了しました！"})
+    
 
 #記録した言葉を一覧ページに表示
 def word_list(request):
