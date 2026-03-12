@@ -2,62 +2,80 @@
 <html lang="ja">
     <head>
         <meta charset= "UTF-8">
-        <title>ことば詳細 </title>  
-             
+        <title>ことばを記録する </title>       
     </head>
 
     <body>
-        
         <header>
             <h2>Kotoba Trace</h2>
         </header>
 
      <main>
-        <div class = "actions">
-            <a href = "{% url 'words:word_list' %}" class = "button_back">戻る</a>
-            <a href = "{% url 'words:word_edit' word.id %}" class = "button_edit">編集</a>
-        </div>
-            <br>
-        <div class = " word_card">
-            <h2>ことば</h2>
-            <p>{{word.content}} </p>
+        <h1>ことばを記録する</h1>
 
-             <p>{% if word.is_public%}
-                ☑公開
-                {% else %}
-                ☐公開
-                {% endif%}
-            <br>
-            <h3>出典</h3>
-            <p>{{word.source_type}}</p>
-            <br>
-            <h3>タイトル</h3>
-            <p>{{word.source_title}}</p>
-            <br>
-            <h3>著者・アーティスト</h3>
-            <p>{{word.source_creator}}</p>
-            <h3>メモ</h3>
-            <p>{{word.memo}}</p>
-            <br>
-            <br>
-            <h3>タグ</h3>
-            <p>
-            {% for tag in word.tags.all %}
-                <span>{{ tag }}</span>
-            {% empty %}
-                <span>タグなし</span>
-            {% endfor %}
-            </p>
+        <form method= "POST">
+            {% csrf_token %}
 
-
+            <label for= "content">記録することば</label>
             <br>
+            <textarea name= "content" id = "content"
+                            style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px; min-height:100px">
+                            {{ form.content.value}}
+            </textarea>
             <br>
 
-           
-        </div>
+            <label for= "source_type">出典(本・音楽・日常 など)</label>
+            <br>
+            <input type= "text" id= "source_type" name= "source_type"
+                   value= "{{ form.source_type.value}}"
+                   style= "width:100% ; padding:10px ; font-size:16px ;">
+                     
+            <br>
+
+            <label for= "source_title">作品名、曲名</label>
+            <br>
+            <input type="text" id= "source_title" name= "source_title" 
+                   value="{{ form.source_title.value}}"
+                   style= "width:100% ; padding:10px ; font-size:16px ;">
+            <br>
+
+            <label for= "source_creator">著者、アーティスト</label>
+            <br>
+            <input type="text" id= "source_creator" name= "source_creator" 
+                   value="{{ form.source_creator.value}}"
+                   style= "width:100% ; padding:10px ; font-size:16px ;">
+            <br>
+
+            <label for= "memo">メモ（公開設定にしても公開されません）</label>
+            <br>
+            <textarea name= "memo"  
+                      style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px;">{{ form.memo.value}}
+            </textarea>
+            <br>
+
+            <label for= "tags">タグ</label>
+            <br>
+             <input type="text" 
+                    name= "tags" 
+                    value="{{ tags_str}}"
+                    placeholder="#夜 #迷ったとき"
+                    style="width:100%; padding:10px; font-size:16px;">
+             <br>
+             <br>
+             
+            <input type="checkbox" id= "is_public" name= "is_public" checked>
+            <label for= "is_public"> 公開する</label>
+            <br>
+
+            <p>※チェックを外すと非公開となります。</p>
 
             <br><br><br>
-        
+            {% if message %}
+                <p style ="color : green;">{{message}}</p>
+            {% endif %}
+
+            <button>保存</button>
+        </form>
      </main>
     </body>
 </html>
