@@ -13,3 +13,12 @@ class Word(models.Model):
     is_public = models.BooleanField(default= True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    tags = models.ManyToManyField("Tag" , blank = True)
+
+#タグテーブル
+class Tag(models.Model):
+    name = models.CharField(max_length= 50) #タグ名
+    def __str__(self):
+        return self.name
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
