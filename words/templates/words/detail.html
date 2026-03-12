@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
     <head>
         <meta charset= "UTF-8">
-        <title>ことば詳細 </title>       
+        <title>ことば詳細 </title>
+        <link rel="stylesheet" href="{% static 'words/detail.css' %}">
     </head>
-
     <body>
         
         <header>
@@ -12,7 +13,12 @@
         </header>
 
      <main>
-        <div>
+        <div class = "actions">
+            <a href = "{% url 'words:word_list' %}" class = "button_back">戻る</a>
+            <a href = "{% url 'words:word_edit' word.id %}" class = "button_edit">編集</a>
+        </div>
+            <br>
+        <div class = "word_card">
             <h2>ことば</h2>
             <p>{{word.content}} </p>
 
@@ -26,12 +32,10 @@
             <p>{{word.source_type}}</p>
             <br>
             <h3>タイトル</h3>
-            <p>{{word.source_title}} 
+            <p>{{word.source_title}}</p>
             <br>
             <h3>著者・アーティスト</h3>
-           <p>{{word.source_creator}}</p>
-            <br>
-            <br>
+            <p>{{word.source_creator}}</p>
             <h3>メモ</h3>
             <p>{{word.memo}}</p>
             <br>
@@ -44,10 +48,11 @@
                 <span>タグなし</span>
             {% endfor %}
             </p>
+
+
             <br>
             <br>
-            <br>
-             
+
            
         </div>
 
