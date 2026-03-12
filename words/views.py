@@ -44,3 +44,8 @@ def word_list(request):
 def word_detail(request , word_id):
     word = get_object_or_404 (Word , pk = word_id)
     return render (request , "words/detail.html" , {"word" : word })
+
+#言葉詳細で編集ボタン押したときに編集画面を返す
+def word_edit(request , word_id):
+    word = get_object_or_404(Word, id = word_id)
+    return render (request, "words/word_edit.html" , {"word" : word})
