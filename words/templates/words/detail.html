@@ -43,7 +43,7 @@
             <h3>タグ</h3>
             <p>
             {% for tag in word.tags.all %}
-                <span>{{ tag }}</span>
+                <span class=""tag>#{{ tag.name }}</span>
             {% empty %}
                 <span>タグなし</span>
             {% endfor %}
