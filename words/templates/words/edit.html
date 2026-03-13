@@ -2,7 +2,7 @@
 <html lang="ja">
     <head>
         <meta charset= "UTF-8">
-        <title>ことばを記録する </title>       
+        <title>ことばを編集する </title>       
     </head>
 
     <body>
@@ -11,10 +11,17 @@
         </header>
 
      <main>
-        <h1>ことばを記録する</h1>
+        <h1>ことばを編集する</h1>
 
         <form method= "POST">
             {% csrf_token %}
+
+            {% if form.errors %}
+                <div style="background: #fee; color: red; padding: 10px; margin-bottom: 10px;">
+                    <strong>エラーが発生しています：</strong>
+                    {{ form.errors }}
+                </div>
+            {% endif %}
 
             <label for= "content">記録することば</label>
             <br>
@@ -57,7 +64,7 @@
             <br>
              <input type="text" 
                     name= "tags" 
-                    value="{{ tags_str}}"
+                    value="{{tags_str}}"
                     placeholder="#夜 #迷ったとき"
                     style="width:100%; padding:10px; font-size:16px;">
              <br>
@@ -74,7 +81,9 @@
                 <p style ="color : green;">{{message}}</p>
             {% endif %}
 
-            <button>保存</button>
+            
+            <button type="submit">保存</button>
+            
         </form>
      </main>
     </body>
