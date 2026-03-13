@@ -5,8 +5,38 @@
         <title>login </title>       
     </head>
 
-    
-<form method="post">
+<body>
+    <header>
+        <h1 style="text-align:center">Kotoba Trace</h1>
+    </header>
+    <br><br>
+    <h2 style="text-align:center">ことばを記録するには</h2>
+    <h2 style="text-align:center">ログインが必要です</h2>
+    <br><br>
+
+    <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}  <button type="submit">ログイン</button>
-</form>
+
+    <div style="text-align:center">
+    <label for = "id_username">メールアドレス</label><br>
+    {{form.username}}
+    <br>
+    <label for="id_password">パスワード</label><br>
+    {{form.password}}
+    <br>
+    <button type="submit">ログイン</button>
+    </div>
+
+    #エラー確認
+
+    <form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div style="color: red;">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+    </form>
+    </body>
+{{ user }}
