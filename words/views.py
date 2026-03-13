@@ -47,16 +47,35 @@ def word_detail(request , word_id):
     return render (request , "words/detail.html" , {"word" : word })
 
 #言葉詳細で編集ボタン押したときに編集画面を返す
-def word_edit(request , word_id):
-    word = get_object_or_404(Word, id = word_id)
-   
+def word_edit(request, word_id):
+    word = get_object_or_404(Word, id=word_id)
+
     if request.method == "POST":
         form = WordForm(request.POST, instance=word)
+
         if form.is_valid():
-            form.save()
-            return redirect("words:word_detail" , word_id = word.id)
+            word = form.save()  #タグ以外を保存
+
+            # タグの処理
+            tags_text = request.POST.get("tags" , "")
+            tag_names = tags_text.split()
+
+            word.tags.clear()   #古いタグ消す
+            for name in tag_names:
+                clean_name = name.lstrip('#')  #'#'消す
+                if clean_name:
+                    tag, _ = Tag.objects.get_or_create(name = clean_name)
+                    word.tags.add(tag)     #新しいタグの紐づけ
+
+            return redirect("words:word_detail", word_id=word.id)
+
     else:
         form = WordForm(instance=word)
-        tags_str = " ".join([tag.name for tag in word.tags.all()])
 
-        return render(request, "words/edit.html" , {"form": form, "tags_str": tags_str})
+    tags_str = " ".join([f"#{tag.name}" for tag in word.tags.all()])
+
+    return render(
+        request,
+        "words/edit.html",
+        {"form": form, "tags_str": tags_str}
+    )
