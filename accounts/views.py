@@ -6,6 +6,7 @@ from django import forms
 
 # Create your views here.
 class EmailLoginForm(AuthenticationForm):
+    #ユーザー名欄をメールアドレス用として定義
     username = forms.EmailField(label="Email")
 
     def clean(self):
@@ -13,10 +14,17 @@ class EmailLoginForm(AuthenticationForm):
         password = self. cleaned_data.get( "password")
         if email and password :
             try:
-                user_obj = User.objects.get("email=email")
+                #メアドからユーザーを探す
+                user_obj = User.objects.get(email=email)
+                #見つかったユーザーのユーザー名を使って認証
+                self.user_cache = authenticate(
+                    self.request, 
+                    username = user_obj.username,
+                    password = password
+                )
             except User.DoesNotExist:
-                raise forms.ValidationError("メールアドレスが存在しません")
+                raise forms.ValidationError("メールアドレスまたはパスワードが正しくありません")
             self.user_cache = authenticate(username=user_obj.username, password = password)
             if self.user_cache is None:
-                raise forms.ValidationError("パスワードが間違っています")
+                raise forms.ValidationError("メールアドレスまたはパスワードが正しくありません")
         return self.cleaned_data
