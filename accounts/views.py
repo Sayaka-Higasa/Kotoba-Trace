@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib. auth. forms import AuthenticationForm
 from django.contrib. auth import authenticate
 from django. contrib. auth. models import User
 from django import forms
+from django.contrib.auth import login
+from .forms import SignUpForm
 
-# Create your views here.
+# ログイン
 class EmailLoginForm(AuthenticationForm):
     #ユーザー名欄をメールアドレス用として定義
     username = forms.EmailField(label="Email")
@@ -28,3 +30,16 @@ class EmailLoginForm(AuthenticationForm):
             if self.user_cache is None:
                 raise forms.ValidationError("メールアドレスまたはパスワードが正しくありません")
         return self.cleaned_data
+    
+    #新規登録、自動ログイン
+def signup_view(request):
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            #ログイン
+            login(request,user)
+            return redirect("/")
+    else:
+        form = SignUpForm()
+    return render (request, "accounts/signup.html", {"form": form})
