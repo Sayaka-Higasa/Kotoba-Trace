@@ -17,6 +17,13 @@
     <form method="post">
     {% csrf_token %}
 
+        <!-- エラー確認 -->
+    {% if form.non_field_errors %}
+    <div style="color: red;">
+    {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
     <div style="text-align:center">
     <label for = "id_username">メールアドレス</label><br>
     {{form.username}}
@@ -24,19 +31,12 @@
     <label for="id_password">パスワード</label><br>
     {{form.password}}
     <br>
-    <button type="submit">ログイン</button>
+    <button type="submit">ログイン</button> <br><br>
+
+    <a href="{% url 'accounts:signup' %}">アカウント登録</a>
+
     </div>
 
-    #エラー確認
 
-    <form method="post">
-    {% csrf_token %}
-
-    {% if form.non_field_errors %}
-        <div style="color: red;">
-            {{ form.non_field_errors }}
-        </div>
-    {% endif %}
     </form>
     </body>
-{{ user }}
