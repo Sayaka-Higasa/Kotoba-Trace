@@ -1,6 +1,6 @@
 from django.urls import path 
-from django . contrib.auth import views as auth_views
-from .views import EmailLoginForm
+from django.contrib.auth import views as auth_views
+from .views import EmailLoginForm, signup_view
 
 app_name = "accounts"
 urlpatterns = [
@@ -13,5 +13,6 @@ urlpatterns = [
         ),
         name="login"
     ),
-     path("logout/" , auth_views.LogoutView.as_view(), name = "logout"),
+    path("logout/" , auth_views.LogoutView.as_view(), name = "logout"),
+    path("signup/", signup_view, name="signup") #新規登録 
     ]
