@@ -14,10 +14,9 @@
     <form method="post">
     {% csrf_token %}
 
-    <form method="post">
-    {% csrf_token %}
-
-    {{ form.errors }} 
+    {% for error in form.password1.errors %}
+        <p style="color: red">{{error}}</p>
+    {% endfor %}
 
 
     <p>
@@ -30,17 +29,20 @@
     {{form.email}}
     </p>
 
+    <p>
     <label for = "id_password1">パスワード</label><br>
     {{form.password1}}
+    </p>
 
     <p>
-    <label for = "id_password2">パスワード確認</label><br>
+    <label for = "id_password2">パスワード再入力</label><br>
     {{form.password2}}
     </p>
 
     <p>
     <button type = "submit">登録</button>
     </p>
+
 
     </form>
 
