@@ -31,12 +31,20 @@
     <label for="id_password">パスワード</label><br>
     {{form.password}}
     <br>
+    <p>
+    <a href="{% url 'accounts:password_reset' %}">パスワードを忘れた方はこちら</a>
+    </p>
+    
+
+
     <button type="submit">ログイン</button> <br><br>
 
     <a href="{% url 'accounts:signup' %}">アカウント登録</a>
 
+    </form>
     </div>
 
 
-    </form>
+
+    
     </body>
