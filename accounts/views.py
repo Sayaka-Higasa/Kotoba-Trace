@@ -9,6 +9,8 @@ from django . utils import timezone
 from datetime import timedelta
 from django.core.mail import send_mail
 from.models import PasswordReset
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 # ログイン
 class EmailLoginForm(AuthenticationForm):
@@ -56,19 +58,16 @@ def password_reset_request(request):
 
         try:
             user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return render(request, "accounts/password_reset_request.html")
+            reset = PasswordReset.objects.create(
+                user = user,
+                password_expiry = timezone.now() + timedelta(hours = 24)
+            )
 
-        reset = PasswordReset.objects.create(
-            user=user,
-            password_expiry=timezone.now() + timedelta(hours=24)
-        )
+            reset_link = f"http://127.0.0.1:8000/accounts/reset/{reset.password_token}/"
 
-        reset_link = f"http://127.0.0.1:8000/accounts/reset/{reset.password_token}/"
-
-        send_mail(
-            "パスワード再設定のご案内",
-            f"""このメールはパスワードをリセットされたお客様に自動送信されています。
+            send_mail(
+                "パスワード再設定のご案内",
+                f"""このメールはパスワードをリセットされたお客様に自動送信されています。
 以下のURLをクリックし、24時間以内にパスワード再設定手続きにお進みください。
 
 {reset_link}
@@ -78,8 +77,16 @@ def password_reset_request(request):
             None,
             [email],
         )
+        except User.DoesNotExist:
+            pass  # 存在しなくても何もせず「送信しました」画面にする
 
-    return render(request, "accounts/password_reset_request.html")
+        # POSTなら必ず「送信しました」画面に飛ばす
+        return render(request, "accounts/password_reset_sent.html")
+
+    # GETのときはメール入力フォームを表示
+    return render(request, "accounts/password_reset_request.html") 
+    
+    
     
 def password_reset_confirm(request,token):
     try:
@@ -93,7 +100,7 @@ def password_reset_confirm(request,token):
     
     #使用済みチェック
     if reset.is_used:
-        return render(request, "coounts/used.html")
+        return render(request, "accounts/used.html")
     
     if request.method == "POST":
         password = request.POST.get("password")
@@ -106,7 +113,15 @@ def password_reset_confirm(request,token):
                 "accounts/password_reset_confirm.html",
                 {"error":"パスワードが一致しません"}
             )
-        
+        try:
+            validate_password(password, user=reset.user)
+        except ValidationError as e:
+            return render(
+                 request,
+                "accounts/password_reset_confirm.html",
+                {"error": e.messages[0]}
+            )
+           
         user = reset.user
         user.set_password(password)
         user.save()
