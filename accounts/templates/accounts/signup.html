@@ -30,7 +30,8 @@
     </p>
 
     <p>
-    <label for = "id_password1">パスワード</label><br>
+    <label for = "id_password1">パスワード(10文字以上、英数字を含む)</label>
+    <br>
     {{form.password1}}
     </p>
 
@@ -42,7 +43,9 @@
     <p>
     <button type = "submit">登録</button>
     </p>
+    <br>
 
+    <a href="{% url 'accounts:login' %}">ログイン画面へ戻る</a>
 
     </form>
 
