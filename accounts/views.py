@@ -5,6 +5,10 @@ from django. contrib. auth. models import User
 from django import forms
 from django.contrib.auth import login
 from .forms import SignUpForm
+from django . utils import timezone
+from datetime import timedelta
+from django.core.mail import send_mail
+from.models import PasswordReset
 
 # ログイン
 class EmailLoginForm(AuthenticationForm):
@@ -43,3 +47,73 @@ def signup_view(request):
     else:
         form = SignUpForm()
     return render (request, "accounts/signup.html", {"form": form})
+
+#メアド入力、メール送信
+def password_reset_request(request):
+
+    if request.method == "POST":
+        email = request.POST.get("email")
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return render(request, "accounts/password_reset_request.html")
+
+        reset = PasswordReset.objects.create(
+            user=user,
+            password_expiry=timezone.now() + timedelta(hours=24)
+        )
+
+        reset_link = f"http://127.0.0.1:8000/accounts/reset/{reset.password_token}/"
+
+        send_mail(
+            "パスワード再設定のご案内",
+            f"""このメールはパスワードをリセットされたお客様に自動送信されています。
+以下のURLをクリックし、24時間以内にパスワード再設定手続きにお進みください。
+
+{reset_link}
+
+※このメールに心当たりがない場合は破棄してください。
+""",
+            None,
+            [email],
+        )
+
+    return render(request, "accounts/password_reset_request.html")
+    
+def password_reset_confirm(request,token):
+    try:
+        reset = PasswordReset.objects.get(password_token=token)
+    except PasswordReset.DoesNotExist:
+        return render(request, "accounts/invalid_link.html")
+    
+    #期限チェック
+    if reset.password_expiry < timezone.now():
+        return render(request, "accounts/expired.html")
+    
+    #使用済みチェック
+    if reset.is_used:
+        return render(request, "coounts/used.html")
+    
+    if request.method == "POST":
+        password = request.POST.get("password")
+        password_confirm = request.POST.get("password_confirm")
+
+        #パスワード一致チェック
+        if password != password_confirm:
+            return render(
+                request,
+                "accounts/password_reset_confirm.html",
+                {"error":"パスワードが一致しません"}
+            )
+        
+        user = reset.user
+        user.set_password(password)
+        user.save()
+
+        reset.is_used = True
+        reset.save()
+
+        return redirect("accounts:login")
+    
+    return render(request,"accounts/password_reset_confirm.html")
