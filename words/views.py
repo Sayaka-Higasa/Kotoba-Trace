@@ -1,77 +1,83 @@
-from django.shortcuts import render , get_object_or_404, redirect
-from. models import Word , Tag
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Word, Tag
 from .forms import WordForm
+from django.core.paginator import Paginator
 
-
-# 一覧ページ閲覧リクエストがきたら、表示できる形に変換して返す
+# --- 一覧ページ (10個ずつ表示) ---
 def word_list(request):
-    return render(request, "words/list.html")
+    # 最新順に並び替え
+    words_all = Word.objects.all().order_by("-created_at")
+    
+    # 1ページ10個に設定
+    paginator = Paginator(words_all, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # テンプレートへ渡す変数名を page_obj に統一
+    return render(request, "words/list.html", {"page_obj": page_obj})
 
-#記録ページ閲覧リクエストがきたら、表示できる形に変換して返す
-def word_record(request):
-    return render(request, "words/record.html")
 
-#記録ページで入力した情報を保存
+# --- 記録ページ (表示と保存を1つに統合) ---
 def word_record(request):
     if request.method == "POST":
-       word = Word.objects.create(
+        # 保存処理を実行
+        word = Word.objects.create(
             user = request.user,
             content = request.POST.get("content"),
             source_type = request.POST.get("source_type"),
             source_title = request.POST.get("source_title"),
             source_creator = request.POST.get("source_creator"),
             memo = request.POST.get("memo"),
-            is_public = request.POST.get("is_public") =="on"
+            is_public = request.POST.get("is_public") == "on"
         )
-       
-       tags_text = request.POST.get("tags")
+        
+        tags_text = request.POST.get("tags")
+        if tags_text:
+            tags = tags_text.split()
+            for tag_name in tags:
+                # データベース保存前に # を削る（##表示対策）
+                clean_name = tag_name.lstrip('#')
+                if clean_name:
+                    tag, created = Tag.objects.get_or_create(name=clean_name)
+                    word.tags.add(tag)
 
-       if tags_text:
-           tags = tags_text.split()
-           
-           for tag_name in tags:
-               tag, created = Tag.objects.get_or_create (name = tag_name)
-               word.tags.add (tag)
-
-    return render(request, "words/record.html", {"message": "保存が完了しました！"})
+        return render(request, "words/record.html", {"message": "保存が完了しました！"})
     
+    # POSTではない(ただページを開いた)場合は、入力フォームを表示
+    return render(request, "words/record.html")
 
-#記録した言葉を一覧ページに表示
-def word_list(request):
-    words = Word.objects.all()
-    return render (request, "words/list.html" , {"words" : words})
 
-#言葉一覧で言葉をクリックしたときに詳細を返す
-def word_detail(request , word_id):
-    word = get_object_or_404 (Word , pk = word_id)
-    return render (request , "words/detail.html" , {"word" : word })
+# --- 詳細ページ ---
+def word_detail(request, word_id):
+    word = get_object_or_404(Word, pk=word_id)
+    return render(request, "words/detail.html", {"word": word})
 
-#言葉詳細で編集ボタン押したときに編集画面を返す
+
+# --- 編集ページ ---
 def word_edit(request, word_id):
     word = get_object_or_404(Word, id=word_id)
 
     if request.method == "POST":
         form = WordForm(request.POST, instance=word)
-
         if form.is_valid():
-            word = form.save()  #タグ以外を保存
-
-            # タグの処理
-            tags_text = request.POST.get("tags" , "")
+            word = form.save()
+            
+            # タグの更新処理
+            tags_text = request.POST.get("tags", "")
             tag_names = tags_text.split()
 
-            word.tags.clear()   #古いタグ消す
+            word.tags.clear() # 一旦リセット
             for name in tag_names:
-                clean_name = name.lstrip('#')  #'#'消す
+                clean_name = name.lstrip('#')
                 if clean_name:
-                    tag, _ = Tag.objects.get_or_create(name = clean_name)
-                    word.tags.add(tag)     #新しいタグの紐づけ
-
+                    tag, _ = Tag.objects.get_or_create(name=clean_name)
+                    word.tags.add(tag)
+                    
             return redirect("words:word_detail", word_id=word.id)
-
     else:
         form = WordForm(instance=word)
 
+    # 編集画面の初期値として、既存のタグに # をつけて表示
     tags_str = " ".join([f"#{tag.name}" for tag in word.tags.all()])
 
     return render(
