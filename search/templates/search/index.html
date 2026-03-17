@@ -2,6 +2,13 @@
 
 {% block content %}
 
-<h1>Search トップページです</h1>
+
+<div style="text-align: left;">
+<h2>キーワードから探す</h2>
+
+<form method = "GET" action="{% url 'search:results'%}">
+    <input type = "search" name= "q" placeholder = "検索したい言葉や#タグを入力" style="width:100%; padding:10px; font-size:16px;" 
+</form>
+</div>
 
 {% endblock %}
