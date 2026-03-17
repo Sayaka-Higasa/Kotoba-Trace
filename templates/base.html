@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Kotoba Trace{% endblock %}</title>
+    <style>
+        /* 下部ナビ */
+        .bottom-nav{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background:white;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        .bottom-nav a{
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        /* 共通ヘッダー */
+        header{
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+        }
+
+        header h2{
+            margin: 0;
+            font-size: 36px; /* ヘッダーの文字サイズ調整 */
+        }
+
+        /* コンテンツ部分 */
+        #content{
+            text-align: center;
+            margin: 20px;
+            padding-bottom: 60px; /* 下部ナビの分スペース確保 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 共通ヘッダー -->
+    <header>
+        <h2>Kotoba Trace</h2>
+    </header>
+
+    <!-- ページ固有のコンテンツ -->
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- 下部ナビ -->
+    {% if user.is_authenticated %}
+    <nav class="bottom-nav">
+        <a href="{% url 'words:word_record' %}">🖋</a>
+        <a href="{% url 'search:index' %}">🔍</a>
+        <a href="{% url 'words:word_list' %}">💬</a>
+        <a href="{% url 'accounts:settings' %}">👤</a>
+    </nav>
+    {% else %}
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'login' %}">ログイン</a>
+        <p>ログインするとことばを記録できます</p>
+    </div>
+    {% endif %}
+
+</body>
+</html>
