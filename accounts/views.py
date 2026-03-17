@@ -11,6 +11,11 @@ from django.core.mail import send_mail
 from.models import PasswordReset
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django .contrib.auth.decorators import login_required
+from django.shortcuts import render
+from django.contrib.auth.models import User
+from django.contrib import messages
+
 
 # ログイン
 class EmailLoginForm(AuthenticationForm):
@@ -132,3 +137,26 @@ def password_reset_confirm(request,token):
         return redirect("accounts:login")
     
     return render(request,"accounts/password_reset_confirm.html")
+
+#設定画面
+@login_required
+def settings_view(request):
+    return render(request,"accounts/settings.html")
+
+#メアド変更（設定画面）
+@login_required
+def email_change(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+
+        if User.objects.filter(email=email).exclude(id.request.user.id).exists():
+            messages.error(request,"このメールアドレスは既に登録されています")
+            return redirect("email_change")
+        
+        request.user.email = email
+        request.user.save()
+
+        return redirect("settings")
+    return render (request,"accounts/email_change.html")
+
+
