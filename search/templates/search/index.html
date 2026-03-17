@@ -2,13 +2,36 @@
 
 {% block content %}
 
+<div style="text-align: left; padding: 20px;">
+    <h2>キーワードから探す</h2>
 
-<div style="text-align: left;">
-<h2>キーワードから探す</h2>
+    <form method="GET" action="{% url 'search:results' %}">
+        <input type="search" name="q" placeholder="検索したい言葉や#タグを入力" style="width:100%; padding:10px; font-size:16px;">
+    </form>
 
-<form method = "GET" action="{% url 'search:results'%}">
-    <input type = "search" name= "q" placeholder = "検索したい言葉や#タグを入力" style="width:100%; padding:10px; font-size:16px;" 
-</form>
+    {% if random_words %}
+    <br>
+    <h3>今だれかが記録したことば</h3>
+    <br>
+
+    <main>
+        {% for word in random_words %}
+        <a href="/words/{{ word.id }}" style="text-decoration: none; color: inherit;">
+            <div class="word_card" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px;">
+                <p>{{ word.content }}</p>
+                <p style="font-size:12px; color:#666;">
+                    タグ<br>
+                    {% for tag in word.tags.all %}
+                        {# 常に#を1つだけ付ける魔法の書き方 #}
+                        <span style="font-size:12px; color:#666;">#{{ tag.name|cut:"#" }}</span>
+                        {% if not forloop.last %} {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+        </a>
+        {% endfor %}
+    </main>
+    {% endif %}
 </div>
 
 {% endblock %}
