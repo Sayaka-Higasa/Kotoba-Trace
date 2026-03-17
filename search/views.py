@@ -1,14 +1,26 @@
 from django.shortcuts import render
 from django.db.models import Q
-from words.models import Word   
+from words.models import Word
+import random
 
-# Create your views here.
-#検索ページ
+# 検索ページ（検索窓 + ランダムカード2件表示）
 def index(request):
-    return render(request, "search/index.html")
+    # 公開されている言葉を取得
+    candidates = Word.objects.filter(is_public=True).order_by('-id')
+
+    # ログイン中なら自分の投稿は除外
+    if request.user.is_authenticated:
+        candidates = candidates.exclude(user=request.user)
+
+    
+    # 新着10件からランダム2件
+    candidates = candidates[:10]
+    random_words = random.sample(list(candidates), min(2, len(candidates)))
+
+    return render(request, "search/index.html", {"random_words": random_words})
 
 
-#検索結果ページ
+# 検索結果ページ
 def results(request):
     query = request.GET.get('q', '').strip()
     words = Word.objects.none()
@@ -23,4 +35,4 @@ def results(request):
                 Q(content__icontains=query) | Q(source_type__icontains=query)
             )
 
-    return render(request, 'search/index.html', {'words': words, 'query': query})
+    return render(request, 'search/results.html', {'words': words, 'query': query})
