@@ -83,12 +83,10 @@
 </head>
 <body>
 
-    <!-- ヘッダー -->
     <header>
         <h2>Kotoba Trace</h2>
     </header>
 
-    <!-- コンテンツ -->
     <div id="content">
         <div class="actions">
             <a href="{% url 'words:word_list' %}" class="button_back">戻る</a>
@@ -116,7 +114,8 @@
             <h3>タグ</h3>
             <p>
                 {% for tag in word.tags.all %}
-                    <span class="tag">#{{ tag.name }}</span>
+                    {# #が二重にならないように修正 #}
+                    <span class="tag">#{{ tag.name|cut:"#" }}</span>
                 {% empty %}
                     <span>タグなし</span>
                 {% endfor %}
@@ -124,7 +123,6 @@
         </div>
     </div>
 
-    <!-- 下部ナビ -->
     {% if user.is_authenticated %}
     <nav class="bottom-nav">
         <a href="{% url 'words:word_record' %}">🖋</a>
