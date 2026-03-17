@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset= "UTF-8">
-        <title>login </title>       
-    </head>
+{% extends "base.html" %}
+{% block title %}メールアドレス変更{% endblock %}
 
-<body>
-    <header>
-        <h1 style="text-align:center">Kotoba Trace</h1>
-    </header>
+{% block content %}
 
     <div style="text-align:center;">
         <h2>メールアドレス変更</h2>
@@ -20,8 +13,8 @@
         </p>
         
         <p>新しいメールアドレス</p>
-        <input type = "email" name = "email">
+        <input type = "email" name = "email"><br><br>
 
         <button type = "submit">変更</button>
     </form>
-    
+    {% endblock %}
