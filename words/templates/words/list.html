@@ -1,31 +1,84 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <meta charset= "UTF-8">
-        <title>ことば一覧 </title>  
-        <link rel = "stylesheet" href = "{% static 'words/list.css' %}">
-    </head>
-    <body>
-         <header>
-            <h2>Kotoba Trace</h2>
-         </header>
-         <p>現在の登録件数: {{ words.count }}</p>
+<head>
+    <meta charset="UTF-8">
+    <title>ことば一覧</title>  
+    <link rel="stylesheet" href="{% static 'words/list.css' %}">
+    <style>
+        /* 下部ナビ */
+        .bottom-nav{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background:white;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
 
-        <main>
-            {% for word in words %}
-            <a href="/words/{{word.id}}">
-                <div class = "word_card">
-                    <p>{{ word.content}}</p>
-                        <br>
-                        <label>
-                        {{word.source_type}}
-                        <input type="checkbox" {% if word.is_public %}checked="checked"{% endif %}>
-                        公開する
-                    </label>
-                </div>
-                </a>
-            {%endfor%}
-        </main>
-    </body>
+        .bottom-nav a{
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        /* ヘッダー */
+        header{
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+        }
+
+        header h2{
+            margin: 0;
+            font-size: 36px;
+        }
+
+        /* main の余白確保 */
+        main{
+            padding-bottom: 60px; /* 下部ナビ分 */
+        }
+    </style>
+</head>
+<body>
+     <header>
+        <h2>Kotoba Trace</h2>
+     </header>
+
+     <p>現在の登録件数: {{ words.count }}</p>
+
+    <main>
+        {% for word in words %}
+        <a href="/words/{{ word.id }}">
+            <div class="word_card">
+                <p>{{ word.content }}</p>
+                <br>
+                <label>
+                    {{ word.source_type }}
+                    <input type="checkbox" {% if word.is_public %}checked="checked"{% endif %}>
+                    公開する
+                </label>
+            </div>
+        </a>
+        {% endfor %}
+    </main>
+
+    <!-- 下部ナビ -->
+    {% if user.is_authenticated %}
+    <nav class="bottom-nav">
+        <a href="{% url 'words:word_record' %}">🖋</a>
+        <a href="{% url 'search:index' %}">🔍</a>
+        <a href="{% url 'words:word_list' %}">💬</a>
+        <a href="{% url 'accounts:settings' %}">👤</a>
+    </nav>
+    {% else %}
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'login' %}">ログイン</a>
+        <p>ログインするとことばを記録できます</p>
+    </div>
+    {% endif %}
+
+</body>
 </html>

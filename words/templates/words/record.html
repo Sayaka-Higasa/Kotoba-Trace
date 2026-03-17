@@ -1,8 +1,44 @@
 <!DOCTYPE html>
 <html lang="ja">
     <head>
-        <meta charset= "UTF-8">
-        <title>ことばを記録する </title>       
+        <meta charset="UTF-8">
+        <title>ことばを記録する</title>
+        <style>
+            /* 下部ナビ */
+            .bottom-nav{
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background:white;
+                border-top: 1px solid #ccc;
+                display: flex;
+                justify-content: space-around;
+                padding: 10px 0;
+            }
+
+            .bottom-nav a{
+                font-size: 24px;
+                text-decoration: none;
+            }
+
+            /* main の余白確保 */
+            main{
+                padding-bottom: 60px; /* 下部ナビの分 */
+            }
+
+            /* ヘッダー */
+            header{
+                text-align: center;
+                padding: 20px 0;
+                background-color: #f0f0f0;
+            }
+
+            header h2{
+                margin: 0;
+                font-size: 36px;
+            }
+        </style>
     </head>
 
     <body>
@@ -10,68 +46,78 @@
             <h2>Kotoba Trace</h2>
         </header>
 
-     <main>
-        <h1>ことばを記録する</h1>
+        <main>
+            <h1>ことばを記録する</h1>
 
-        <form method= "POST">
-            {% csrf_token %}
+            <form method="POST">
+                {% csrf_token %}
 
-            <label for= "content">記録することば</label>
-            <br>
-            <textarea name= "content" 
-            style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px;">
+                <label for="content">記録することば</label>
+                <br>
+                <textarea name="content" 
+                style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px;">
+                </textarea>
+                <br>
 
-            </textarea>
-            <br>
+                <label for="source_type">出典(本・音楽・日常 など)</label>
+                <br>
+                <input type="text" id="source_type" name="source_type"
+                style="width:100%; padding:10px; font-size:16px;">
+                <br>
 
-            <label for= "source_type">出典(本・音楽・日常 など)</label>
-            <br>
-            <input type= "text" id= "source_type" name= "source_type"
-            style= "width:100% ; padding:10px ; font-size:16px ;">
-            <br>
+                <label for="source_title">作品名、曲名</label>
+                <br>
+                <input type="text" id="source_title" name="source_title" 
+                style="width:100%; padding:10px; font-size:16px;">
+                <br>
 
-            <label for= "source_title">作品名、曲名</label>
-            <br>
-            <input type="text" id= "source_title" name= "source_title" 
-            style= "width:100% ; padding:10px ; font-size:16px ;">
-            <br>
+                <label for="source_creator">著者、アーティスト</label>
+                <br>
+                <input type="text" id="source_creator" name="source_creator" 
+                style="width:100%; padding:10px; font-size:16px;">
+                <br>
 
-            <label for= "source_creator">著者、アーティスト</label>
-            <br>
-            <input type="text" id= "source_creator" name= "source_creator" 
-            style= "width:100% ; padding:10px ; font-size:16px ;">
-            <br>
+                <label for="memo">メモ（公開設定にしても公開されません）</label>
+                <br>
+                <textarea name="memo" 
+                style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px;">
+                </textarea>
+                <br>
 
-            <label for= "memo">メモ（公開設定にしても公開されません）</label>
-            <br>
-            <textarea name= "memo" 
-            style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px;">
+                <label for="tags">タグ</label>
+                <br>
+                <input type="text" name="tags" placeholder="#夜 #迷ったとき" 
+                style="width:100%; padding:10px; font-size:16px;">
+                <br><br>
 
-            </textarea>
-            <br>
+                <input type="checkbox" id="is_public" name="is_public" checked>
+                <label for="is_public"> 公開する</label>
+                <br>
+                <p>※チェックを外すと非公開となります。</p>
+                <br><br><br>
 
-            <label for= "tags">タグ</label>
-            <br>
-             <input type="text" 
-                    name= "tags" 
-                    placeholder= "#夜 #迷ったとき" 
-                    style= "width:100% ; padding:10px ; font-size:16px ;">
-             <br>
-             <br>
-             
-            <input type="checkbox" id= "is_public" name= "is_public" checked>
-            <label for= "is_public"> 公開する</label>
-            <br>
+                {% if message %}
+                    <p style="color: green;">{{ message }}</p>
+                {% endif %}
 
-            <p>※チェックを外すと非公開となります。</p>
+                <button>保存</button>
+            </form>
+        </main>
 
-            <br><br><br>
-            {% if message %}
-                <p style ="color : green;">{{message}}</p>
-            {% endif %}
+        <!-- 下部ナビ -->
+        {% if user.is_authenticated %}
+        <nav class="bottom-nav">
+            <a href="{% url 'words:word_record' %}">🖋</a>
+            <a href="{% url 'search:index' %}">🔍</a>
+            <a href="{% url 'words:word_list' %}">💬</a>
+            <a href="{% url 'accounts:settings' %}">👤</a>
+        </nav>
+        {% else %}
+        <div style="text-align:center; margin-top:20px;">
+            <a href="{% url 'login' %}">ログイン</a>
+            <p>ログインするとことばを記録できます</p>
+        </div>
+        {% endif %}
 
-            <button>保存</button>
-        </form>
-     </main>
     </body>
 </html>

@@ -1,63 +1,143 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <meta charset= "UTF-8">
-        <title>ことば詳細 </title>
-        <link rel="stylesheet" href="{% static 'words/detail.css' %}">
-    </head>
-    <body>
-        
-        <header>
-            <h2>Kotoba Trace</h2>
-        </header>
+<head>
+    <meta charset="UTF-8">
+    <title>ことば詳細</title>
+    <link rel="stylesheet" href="{% static 'words/detail.css' %}">
+    <style>
+        /* 下部ナビ */
+        .bottom-nav{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background:white;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
 
-     <main>
-        <div class = "actions">
-            <a href = "{% url 'words:word_list' %}" class = "button_back">戻る</a>
-            <a href = "{% url 'words:word_edit' word.id %}" class = "button_edit">編集</a>
+        .bottom-nav a{
+            font-size: 24px; /* 絵文字サイズ */
+            text-decoration: none;
+        }
+
+        /* ヘッダー */
+        header{
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+        }
+
+        header h2{
+            margin: 0;
+            font-size: 36px;
+        }
+
+        /* コンテンツ部分 */
+        #content{
+            margin: 20px;
+            padding-bottom: 60px; /* 下部ナビの分スペース確保 */
+        }
+
+        .word_card{
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px auto;
+        }
+
+        .actions{
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .actions a.button_back,
+        .actions a.button_edit{
+            margin: 0 10px;
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #f8f8f8;
+            color: #333;
+        }
+
+        .word_card h2, .word_card h3{
+            margin: 10px 0 5px 0;
+        }
+
+        .word_card p{
+            margin: 0 0 10px 0;
+        }
+
+        .tag{
+            display: inline-block;
+            background-color: #eee;
+            border-radius: 4px;
+            padding: 2px 6px;
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <h2>Kotoba Trace</h2>
+    </header>
+
+    <!-- コンテンツ -->
+    <div id="content">
+        <div class="actions">
+            <a href="{% url 'words:word_list' %}" class="button_back">戻る</a>
+            <a href="{% url 'words:word_edit' word.id %}" class="button_edit">編集</a>
         </div>
-            <br>
-        <div class = "word_card">
-            <h2>ことば</h2>
-            <p>{{word.content}} </p>
 
-             <p>{% if word.is_public%}
-                ☑公開
-                {% else %}
-                ☐公開
-                {% endif%}
-            <br>
+        <div class="word_card">
+            <h2>ことば</h2>
+            <p>{{ word.content }}</p>
+
+            <p>{% if word.is_public %}☑公開{% else %}☐公開{% endif %}</p>
+
             <h3>出典</h3>
-            <p>{{word.source_type}}</p>
-            <br>
+            <p>{{ word.source_type }}</p>
+
             <h3>タイトル</h3>
-            <p>{{word.source_title}}</p>
-            <br>
+            <p>{{ word.source_title }}</p>
+
             <h3>著者・アーティスト</h3>
-            <p>{{word.source_creator}}</p>
+            <p>{{ word.source_creator }}</p>
+
             <h3>メモ</h3>
-            <p>{{word.memo}}</p>
-            <br>
-            <br>
+            <p>{{ word.memo }}</p>
+
             <h3>タグ</h3>
             <p>
-            {% for tag in word.tags.all %}
-                <span class=""tag>#{{ tag.name }}</span>
-            {% empty %}
-                <span>タグなし</span>
-            {% endfor %}
+                {% for tag in word.tags.all %}
+                    <span class="tag">#{{ tag.name }}</span>
+                {% empty %}
+                    <span>タグなし</span>
+                {% endfor %}
             </p>
-
-
-            <br>
-            <br>
-
-           
         </div>
+    </div>
 
-            <br><br><br>
-        
-     </main>
-    </body>
+    <!-- 下部ナビ -->
+    {% if user.is_authenticated %}
+    <nav class="bottom-nav">
+        <a href="{% url 'words:word_record' %}">🖋</a>
+        <a href="{% url 'search:index' %}">🔍</a>
+        <a href="{% url 'words:word_list' %}">💬</a>
+        <a href="{% url 'accounts:settings' %}">👤</a>
+    </nav>
+    {% else %}
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'login' %}">ログイン</a>
+        <p>ログインするとことばを記録できます</p>
+    </div>
+    {% endif %}
+
+</body>
 </html>

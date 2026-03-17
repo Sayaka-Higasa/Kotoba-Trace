@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset= "UTF-8">
-        <title>ことばを編集する </title>       
-    </head>
-
-    <body>
-        <header>
-            <h2>Kotoba Trace</h2>
-        </header>
-
+{% extends "base.html" %}
      <main>
-        <h1>ことばを編集する</h1>
+        {% block title %}ことばを編集する{% endblock %}
 
+        {% block content %}
         <form method= "POST">
             {% csrf_token %}
 
@@ -23,7 +13,7 @@
                 </div>
             {% endif %}
 
-            <label for= "content">記録することば</label>
+            <label for= "content">ことばを編集する</label>
             <br>
             <textarea name= "content" id = "content"
                             style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px; min-height:100px">
@@ -86,5 +76,4 @@
             
         </form>
      </main>
-    </body>
-</html>
+    {% endblock %}
