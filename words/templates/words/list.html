@@ -38,7 +38,29 @@
 
         /* main の余白確保 */
         main{
-            padding-bottom: 60px; /* 下部ナビ分 */
+            padding-bottom: 20px;
+        }
+
+        /* リンクの見た目を整える */
+        .word_card_link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        /* ページ移動ボタンのスタイル（追加分） */
+        .pagination {
+            text-align: center;
+            margin: 20px 0 80px 0;
+            font-size: 14px;
+        }
+        .pagination a {
+            text-decoration: none;
+            color: #007bff;
+            margin: 0 10px;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -47,25 +69,42 @@
         <h2>Kotoba Trace</h2>
      </header>
 
-     <p>現在の登録件数: {{ words.count }}</p>
+     {# views.pyに合わせて page_obj.paginator.count に変更 #}
+     <p>現在の登録件数: {{ page_obj.paginator.count }}</p>
 
     <main>
-        {% for word in words %}
-        <a href="/words/{{ word.id }}">
+        {# views.pyで渡している名前 page_obj に合わせました #}
+        {% for word in page_obj %}
+        <a href="/words/{{ word.id }}" class="word_card_link">
             <div class="word_card">
                 <p>{{ word.content }}</p>
                 <br>
                 <label>
                     {{ word.source_type }}
-                    <input type="checkbox" {% if word.is_public %}checked="checked"{% endif %}>
+                    <input type="checkbox" {% if word.is_public %}checked="checked"{% endif %} onclick="return false;">
                     公開する
                 </label>
             </div>
         </a>
+        {% empty %}
+            <p style="text-align: center; color: #999;">まだ登録された言葉がありません。</p>
         {% endfor %}
     </main>
 
-    <!-- 下部ナビ -->
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">前へ</a>
+        {% endif %}
+
+        <span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">次へ</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
     {% if user.is_authenticated %}
     <nav class="bottom-nav">
         <a href="{% url 'words:word_record' %}">🖋</a>
@@ -74,7 +113,7 @@
         <a href="{% url 'accounts:settings' %}">👤</a>
     </nav>
     {% else %}
-    <div style="text-align:center; margin-top:20px;">
+    <div style="text-align:center; margin-top:20px; padding-bottom: 80px;">
         <a href="{% url 'login' %}">ログイン</a>
         <p>ログインするとことばを記録できます</p>
     </div>
