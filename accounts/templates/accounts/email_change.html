@@ -1,20 +1,87 @@
 {% extends "base.html" %}
-{% block title %}メールアドレス変更{% endblock %}
+
+{% block title %}メールアドレス変更 - Kotoba Trace{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        width: 92%;
+        max-width: 31.25rem;
+        margin: 0 auto;
+        text-align: left;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: bold;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .form-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        color: #333;
+        background-color: #fff;
+    }
+
+    .current-email {
+        font-size: 1rem;
+        color: #6b7280;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 1.5rem;
+    }
+
+    /* 保存ボタンのサイズ調整 */
+    .save-btn {
+        display: inline-block;
+        min-width: 7rem;      /* 112px相当：小さすぎず押しやすい */
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9375rem; /* 15px相当 */
+    }
+</style>
+{% endblock %}
 
 {% block content %}
+<div class="form-container">
+    <div style="margin-bottom: 1rem;">
+        <a href="javascript:history.back()" class="btn btn-secondary" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+            戻る
+        </a>
+    </div>
 
-    <div style="text-align:center;">
-        <h2>メールアドレス変更</h2>
-        <form method = "POST">
+    <h2 style="text-align: center; color: #4b5563; margin-bottom: 2rem; font-size: 1.25rem;">メールアドレス変更</h2>
+
+    <form method="POST">
         {% csrf_token %}
 
-        <p>現在のメールアドレス<br>
-            {{ request.user.email }}
-        </p>
+        <div class="form-group">
+            <label class="form-label">現在のメールアドレス</label>
+            <div class="current-email">{{ request.user.email }}</div>
+        </div>
         
-        <p>新しいメールアドレス</p>
-        <input type = "email" name = "email"><br><br>
+        <div class="form-group">
+            <label class="form-label">新しいメールアドレス</label>
+            <input type="email" name="email" class="form-input" required >
+        </div>
 
-        <button type = "submit">変更</button>
+        <div style="text-align: center; margin-top: 2.5rem;">
+            <button type="submit" class="btn btn-primary save-btn">
+                保存
+            </button>
+        </div>
     </form>
-    {% endblock %}
+</div>
+
+{% include "nav.html" %}
+{% endblock %}
