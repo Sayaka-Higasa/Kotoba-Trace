@@ -1,155 +1,129 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>ことば詳細</title>
-    <link rel="stylesheet" href="{% static 'words/detail.css' %}">
-    <style>
-        /* 下部ナビ */
-        .bottom-nav{
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background:white;
-            border-top: 1px solid #ccc;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-        }
 
-        .bottom-nav a{
-            font-size: 24px; /* 絵文字サイズ */
-            text-decoration: none;
-        }
+{% block title %}ことば詳細 - Kotoba Trace{% endblock %}
 
-        /* ヘッダー */
-        header{
-            text-align: center;
-            padding: 20px 0;
-            background-color: #f0f0f0;
-        }
+{% block extra_css %}
+<style>
+    /* 全体のコンテナ */
+    .detail-container {
+        width: 100%;              /* ← 変更（安定） */
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 0 1rem;          /* ← 追加（左右余白） */
+        text-align: left;
+    }
 
-        header h2{
-            margin: 0;
-            font-size: 36px;
-        }
+    /* 上部アクションボタン */
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;          /* ← 追加（折り返し） */
+        gap: 0.5rem;              /* ← 追加（余白） */
+        margin: 1.25rem 0;
+    }
 
-        /* コンテンツ部分 */
-        #content{
-            margin: 20px;
-            padding-bottom: 60px; /* 下部ナビの分スペース確保 */
-        }
+    /* ボタン */
+    .actions a {
+        min-width: 4rem;
+        text-align: center;
+        text-decoration: none;
+        font-size: 0.875rem;
+        flex: none;
+        padding: 0.5rem 0.75rem;                  /* ← 追加（バランスよく広がる） */
+    }
 
-        .word_card{
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin: 10px auto;
-        }
+    /* カード */
+    .word_card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        padding: 1.25rem;         /* ← 少しだけ軽く */
+        border-radius: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        margin-bottom: 6rem;
+    }
 
-        .actions{
-            text-align: center;
-            margin-bottom: 10px;
-        }
+    /* 見出し */
+    .word_card h2, .word_card h3 {
+        font-size: 0.8125rem;
+        color: #9ca3af;
+        margin: 1.25rem 0 0.375rem 0;
+        font-weight: bold;
+    }
+    .word_card h2:first-child { margin-top: 0; }
 
-        .actions a.button_back,
-        .actions a.button_edit{
-            margin: 0 10px;
-            text-decoration: none;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background: #f8f8f8;
-            color: #333;
-        }
+    /* テキスト */
+    .word_card p {
+        font-size: 1.0625rem;
+        color: #1f2937;
+        line-height: 1.7;
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word; /* ← 追加（はみ出し防止） */
+    }
 
-        .word_card h2, .word_card h3{
-            margin: 10px 0 5px 0;
-        }
+    /* 公開設定 */
+    .status-text {
+        font-size: 0.875rem;
+        font-weight: bold;
+        color: #4b5563;
+    }
 
-        .word_card p{
-            margin: 0 0 10px 0;
-        }
+    /* タグ */
+    .tag {
+        display: inline-block;
+        background-color: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        padding: 0.25rem 0.625rem;
+        margin: 0.25rem 0.25rem 0 0;
+        color: #4b5563;
+        font-size: 0.8125rem;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
 
-        /* タグのリンク設定 */
-        .tag_link {
-            text-decoration:none;
-            color: inherit;    
-            display: inline-block; 
-            }
-
-        .tag{
-            display: inline-block;
-            background-color: #eee;
-            border-radius: 4px;
-            padding: 2px 6px;
-            margin: 2px;
-        }
-        /* タップしたときに少し暗くして反応を出す */
-        .tag:active{
-            background-color: #ddd;
-        }
-
-    </style>
-</head>
-<body>
-
-    <header>
-        <h2>Kotoba Trace</h2>
-    </header>
-
-    <div id="content">
-        <div class="actions">
-            <a href="javascript:history.back()" class="button_back">戻る</a>
-            <a href="{% url 'words:word_edit' word.id %}" class="button_edit">編集</a>
-        </div>
-
-        <div class="word_card">
-            <h2>ことば</h2>
-            <p>{{ word.content }}</p>
-
-            <p>{% if word.is_public %}☑公開{% else %}☐公開{% endif %}</p>
-
-            <h3>出典</h3>
-            <p>{{ word.source_type }}</p>
-
-            <h3>タイトル</h3>
-            <p>{{ word.source_title }}</p>
-
-            <h3>著者・アーティスト</h3>
-            <p>{{ word.source_creator }}</p>
-
-            <h3>メモ</h3>
-            <p>{{ word.memo }}</p>
-
-            <h3>タグ</h3>
-            <p>
-                {% for tag in word.tags.all %}
-                    <a href="{% url 'search:results' %}?q=%23{{ tag.name | cut:'#'}}"class="tag_link">
-                    <!-- #が二重にならないように修正 -->
-                        <span class="tag">#{{ tag.name|cut:"#" }}</span>
-                    </a>
-                {% empty %}
-                    <span>タグなし</span>
-                {% endfor %}
-            </p>
-        </div>
+{% block content %}
+<div class="detail-container">
+    <div class="actions">
+        <a href="javascript:history.back()" class="btn btn-secondary">戻る</a>
+        <a href="{% url 'words:word_edit' word.id %}" class="btn btn-primary">編集</a>
     </div>
 
-    {% if user.is_authenticated %}
-    <nav class="bottom-nav">
-        <a href="{% url 'words:word_record' %}">🖋</a>
-        <a href="{% url 'search:index' %}">🔍</a>
-        <a href="{% url 'words:word_list' %}">💬</a>
-        <a href="{% url 'accounts:settings' %}">👤</a>
-    </nav>
-    {% else %}
-    <div style="text-align:center; margin-top:20px;">
-        <a href="{% url 'accounts:login' %}">ログイン</a>
-        <p>ログインするとことばを記録できます</p>
-    </div>
-    {% endif %}
+    <div class="word_card">
+        <h2>ことば</h2>
+        <p>{{ word.content }}</p>
 
-</body>
-</html>
+        <div class="status-text" style="margin-top: 1rem;">
+            {% if word.is_public %}☑ 公開中{% else %}☐ 非公開{% endif %}
+        </div>
+
+        <h3>出典</h3>
+        <p>{{ word.source_type|default:"---" }}</p>
+
+        <h3>タイトル</h3>
+        <p>{{ word.source_title|default:"---" }}</p>
+
+        <h3>著者・アーティスト</h3>
+        <p>{{ word.source_creator|default:"---" }}</p>
+
+        <h3>メモ</h3>
+        <p style="color: #6b7280; font-size: 0.9375rem;">{{ word.memo|default:"（メモなし）" }}</p>
+
+        <h3>タグ</h3>
+        <div>
+            {% for tag in word.tags.all %}
+                <a href="{% url 'search:results' %}?q=%23{{ tag.name|cut:'#'}}" style="text-decoration: none; color: inherit;">
+                    <span class="tag">#{{ tag.name|cut:"#" }}</span>
+                </a>
+            {% empty %}
+                <span style="color: #9ca3af; font-size: 0.8125rem;">タグなし</span>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% include "nav.html" %}
+{% endblock %}
