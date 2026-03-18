@@ -3,7 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Kotoba Trace{% endblock %}</title>
-    <style>
+    <style> 
+        /* 全体の背景色 */
+        body {
+            background-color: #fefce8;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            font-family:sans-serif;
+        }
+
+        /* 共通ボタン設定 */
+        .btn {
+            display: inline-block;
+            padding:10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* 黄緑ボタン */
+        .btn-primary{
+            background-color: #4ade80;
+            color: #000;
+        }
+
+        /* 赤ボタン */
+        .btn-danger{
+            background-color: #f87171;
+            color: #000;
+        }
+
+        /* グレーボタン */
+        .btn-secondary{
+            background-color: #e5e7eb;
+            color: #000;
+        }
+
+
+
         /* 下部ナビ */
         .bottom-nav{
             position: fixed;
