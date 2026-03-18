@@ -2,114 +2,147 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Kotoba Trace{% endblock %}</title>
+
     <style> 
-        /* 全体の背景色 */
-        body {
-            background-color: #fefce8;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            font-family:sans-serif;
+        /* ← 追加（これ超重要） */
+        * {
+            box-sizing: border-box;
         }
 
-        /* 共通ボタン設定 */
+        body {
+            background-color: #fefce8;
+            color: #1f2937; 
+            margin: 0;
+            padding: 1rem; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.5;
+            overflow-x: hidden; /* ← 追加（横スクロール防止） */
+        }
+
+        /* 2. リンク */
+        a {
+            color: #4ade80;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        a:hover {
+            color: #22c55e;
+            text-decoration: underline;
+        }
+
+        /* 3. 共通ボタン */
         .btn {
             display: inline-block;
-            padding:10px 20px;
-            border-radius: 8px;
+            padding: 0.75rem 1.25rem; 
+            border-radius: 0.5rem;    
             text-decoration: none;
             font-weight: bold;
             border: none;
             cursor: pointer;
             text-align: center;
-            font-size: 16px;
+            font-size: 1rem;          
+            transition: opacity 0.2s;
         }
+        .btn:active { opacity: 0.8; }
 
-        /* 黄緑ボタン */
-        .btn-primary{
-            background-color: #4ade80;
-            color: #000;
-        }
+        .btn-primary { background-color: #4ade80; color: #000; }
+        .btn-danger { background-color: #f87171; color: #000; }
+        .btn-secondary { background-color: #e5e7eb; color: #000; }
 
-        /* 赤ボタン */
-        .btn-danger{
-            background-color: #f87171;
-            color: #000;
-        }
-
-        /* グレーボタン */
-        .btn-secondary{
-            background-color: #e5e7eb;
-            color: #000;
-        }
-
-
-
-        /* 下部ナビ */
-        .bottom-nav{
+        /* 4. 下部ナビ */
+        .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background:white;
-            border-top: 1px solid #ccc;
+            background: white;
+            border-top: 1px solid #e5e7eb;
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
+            padding: 0.625rem 0; 
+            z-index: 1000;
         }
 
-        .bottom-nav a{
-            font-size: 24px;
+        .bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-decoration: none;
+            color: #4b5563;
+            gap: 0.125rem;
         }
 
-        /* 共通ヘッダー */
-        header{
+        .bottom-nav a span {
+            font-size: 1.25rem; 
+        }
+
+        .bottom-nav a small {
+            font-size: 0.6875rem; 
+            font-weight: bold;    
+        }
+
+        /* ヘッダー */
+        header {
             text-align: center;
-            padding: 20px 0;
-            background-color: #f0f0f0;
+            padding: 1.875rem 0 0.625rem 0;
+            background-color: #fefce8;
         }
 
-        header h2{
+        header h2 {
             margin: 0;
-            font-size: 36px; /* ヘッダーの文字サイズ調整 */
+            font-size: 1.25rem; 
+            color: #4b5563;
+            font-weight: bold;
+            letter-spacing: 0.05em;
         }
 
         /* コンテンツ部分 */
-        #content{
-            text-align: center;
-            margin: 20px;
-            padding-bottom: 60px; /* 下部ナビの分スペース確保 */
+        #content {
+            width: 100%;
+            max-width: 600px; 
+            margin: 0 auto;
+            padding-bottom: 5rem; 
+        }
+
+        /* メッセージボックス */
+        .alert-message {
+            padding: 0.75rem 1rem;
+            background: #dcfce7;
+            color: #166534;
+            margin-bottom: 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem; 
         }
     </style>
+
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-    <!-- 共通ヘッダー -->
     <header>
         <h2>Kotoba Trace</h2>
     </header>
 
-    <!-- ページ固有のコンテンツ -->
     <div id="content">
+        {% if messages %}
+            <div class="alert-message">
+                {% for message in messages %}
+                    <p style="margin: 0;">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         {% block content %}{% endblock %}
     </div>
 
-    <!-- 下部ナビ -->
-    {% if user.is_authenticated %}
-    <nav class="bottom-nav">
-        <a href="{% url 'words:word_record' %}">🖋</a>
-        <a href="{% url 'search:index' %}">🔍</a>
-        <a href="{% url 'words:word_list' %}">💬</a>
-        <a href="{% url 'accounts:settings' %}">👤</a>
-    </nav>
-    {% else %}
-    <div style="text-align:center; margin-top:20px;">
-        <a href="{% url 'accounts:login' %}">ログイン</a>
-        <p>ログインするとことばを記録できます</p>
-    </div>
-    {% endif %}
+    <script>
+        function confirmDelete() {
+            return confirm("本当に削除してもよろしいですか？");
+        }
+    </script>
 
 </body>
 </html>
