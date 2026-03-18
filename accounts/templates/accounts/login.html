@@ -1,50 +1,36 @@
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset= "UTF-8">
-        <title>login </title>       
-    </head>
+{% extends "base.html" %}  {# 1. base.htmlを読み込む合言葉 #}
 
-<body>
-    <header>
-        <h1 style="text-align:center">Kotoba Trace</h1>
-    </header>
-    <br><br>
-    <h2 style="text-align:center">ことばを記録するには</h2>
-    <h2 style="text-align:center">ログインが必要です</h2>
-    <br><br>
+{% block title %}ログイン{% endblock %}
 
-    <form method="post">
-    {% csrf_token %}
-
-        <!-- エラー確認 -->
-    {% if form.non_field_errors %}
-    <div style="color: red;">
-    {{ form.non_field_errors }}
+{% block content %}  
+    <div style="margin-top: 40px;">
+        <h2>ことばを記録するには</h2>
+        <h2>ログインが必要です</h2>
     </div>
-    {% endif %}
 
-    <div style="text-align:center">
-    <label for = "id_username">メールアドレス</label><br>
-    {{form.username}}
-    <br>
-    <label for="id_password">パスワード</label><br>
-    {{form.password}}
-    <br>
-    <p>
-    <a href="{% url 'accounts:password_reset' %}">パスワードを忘れた方はこちら</a>
-    </p>
-    
+    <form method="post" style="margin-top: 30px;">
+        {% csrf_token %}
 
+        {% if form.non_field_errors %}
+            <div style="color: red;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
 
-    <button type="submit" class="btn btn-primary">ログイン</button> <br><br>
-
-    <a href="{% url 'accounts:signup' %}">アカウント登録</a>
-
+        <div style="text-align:center">
+            <label for="id_username">メールアドレス</label><br>
+            {{ form.username }}
+            <br><br>
+            <label for="id_password">パスワード</label><br>
+            {{ form.password }}
+            <br>
+            <p>
+                <a href="{% url 'accounts:password_reset' %}">パスワードを忘れた方はこちら</a>
+            </p>
+            
+            <button type="submit" class="btn btn-primary">ログイン</button> 
+            <br><br>
+            <a href="{% url 'accounts:signup' %}">アカウント登録</a>
+        </div>
     </form>
-    </div>
-
-
-
-    
-    </body>
+{% endblock %} 
