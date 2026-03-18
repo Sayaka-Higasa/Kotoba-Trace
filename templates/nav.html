@@ -1,0 +1,26 @@
+   <!-- 下部ナビ -->
+{% if user.is_authenticated %}
+    <nav class="bottom-nav">
+        <a href="{% url 'words:word_record' %}">
+            <span>🖋</span>
+            <small>記録</small>
+            </a>
+        <a href="{% url 'search:index' %}">
+            <span>🔍</span>
+            <small>さがす</small>
+            </a>
+        <a href="{% url 'words:word_list' %}">
+            <span>💬</span>
+            <small>記録したことば</small>
+            </a>
+        <a href="{% url 'accounts:settings' %}">
+            <span>👤</span>
+            <small>設定</small>
+            </a>
+    </nav>
+{% else %}
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'accounts:login' %}" class="btn btn-primary">ログイン</a>
+        <p>ログインするとことばを記録できます</p>
+    </div>
+{% endif %}
