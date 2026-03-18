@@ -18,23 +18,30 @@
     <h3>今だれかが記録したことば</h3>
     <br>
 
-    <main>
-        {% for word in random_words %}
-        <a href="/words/{{ word.id }}" style="text-decoration: none; color: inherit;">
-            <div class="word_card" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px;">
-                <p>{{ word.content }}</p>
-                <p style="font-size:12px; color:#666;">
-                    タグ<br>
-                    {% for tag in word.tags.all %}
-            
-                        <span style="font-size:12px; color:#666;">#{{ tag.name|cut:"#" }}</span>
-                        {% if not forloop.last %} {% endif %}
-                    {% endfor %}
-                </p>
-            </div>
+        <main>
+    {% for word in random_words %}
+    <div class="word_card" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px; position: relative;">
+        
+        {# 1. 本文とエリア全体を詳細へのリンクにする #}
+        <a href="/words/{{ word.id }}" style="text-decoration: none; color: inherit; display: block;">
+            <p>{{ word.content }}</p>
         </a>
-        {% endfor %}
-    </main>
+
+        {# 2. タグ部分は独立したリンクにする #}
+        <p style="font-size:12px; color:#666; margin-top: 10px;">
+            タグ<br>
+            {% for tag in word.tags.all %}
+                <a href="{% url 'search:results' %}?q=%23{{ tag.name|cut:'#' }}" 
+                   style="text-decoration: none; color: inherit; display: inline-block; margin-top: 5px;">
+                    <span style="background: #eee; padding: 2px 6px; border-radius: 4px; border: 1px solid #ddd;">
+                        #{{ tag.name|cut:"#" }}
+                    </span>
+                </a>
+            {% endfor %}
+        </p>
+    </div>
+    {% endfor %}
+</main>
     {% endif %}
 </div>
 
