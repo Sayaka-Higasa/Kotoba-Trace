@@ -16,4 +16,12 @@
 ●●●●●●●●●●
 <a href="{% url 'accounts:password_change' %}">変更</a>
 </p>
+    <form action="{% url 'accounts:logout' %}" method="post" style="margin-top: 30px;">
+        {% csrf_token %}
+        <button type="submit" style="background: none; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+            ログアウト
+        </button>
+    </form>
+
+
 {% endblock %}
