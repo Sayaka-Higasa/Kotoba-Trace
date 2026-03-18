@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>検索結果 - Kotoba Trace</title>  
+    <link rel="stylesheet" href="{% static 'words/list.css' %}">
+    <style>
+        /* 下部ナビ */
+        .bottom-nav{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background:white;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        .bottom-nav a{
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        /* ヘッダー */
+        header{
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+        }
+
+        header h2{
+            margin: 0;
+            font-size: 36px;
+        }
+
+        /* main の余白確保 */
+        main{
+            padding: 20px;
+            padding-bottom: 80px; /* ナビに被らないよう調整 */
+        }
+
+        /* リンクの見た目を整える */
+        .word_card_link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .search-info {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+     <header>
+        <h2>Kotoba Trace</h2>
+     </header>
+
+    <main>
+        <div class="search-info">
+            <p>「<strong>{{ query }}</strong>」の検索結果: {{ words.count }} 件</p>
+            <a href="{% url 'search:index' %}" style="color: #007bff; text-decoration: none;">← 再検索する</a>
+        </div>
+
+        {# 検索結果の表示を一覧画面のカード形式に合わせました #}
+        {% for word in words %}
+        <a href="{% url 'words:word_detail' word.id %}" class="word_card_link">
+            <div class="word_card">
+                <p>{{ word.content }}</p>
+                <br>
+                <label>
+                    {{ word.source_type }}
+                    <input type="checkbox" {% if word.is_public %}checked="checked"{% endif %} onclick="return false;">
+                    公開する
+                </label>
+            </div>
+        </a>
+        {% empty %}
+            <p style="text-align: center; color: #999; margin-top: 50px;">該当することばが見つかりませんでした。</p>
+        {% endfor %}
+    </main>
+
+    {# 下部ナビの移植 #}
+    {% if user.is_authenticated %}
+    <nav class="bottom-nav">
+        <a href="{% url 'words:word_record' %}">🖋</a>
+        <a href="{% url 'search:index' %}">🔍</a>
+        <a href="{% url 'words:word_list' %}">💬</a>
+        <a href="{% url 'accounts:settings' %}">👤</a>
+    </nav>
+    {% else %}
+    <div style="text-align:center; margin-top:20px; padding-bottom: 80px;">
+        <a href="{% url 'login' %}">ログイン</a>
+        <p>ログインするとことばを記録できます</p>
+    </div>
+    {% endif %}
+
+</body>
+</html>
