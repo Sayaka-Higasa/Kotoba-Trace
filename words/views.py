@@ -5,8 +5,11 @@ from django.core.paginator import Paginator
 
 # --- 一覧ページ (10個ずつ表示) ---
 def word_list(request):
+    if request. user.is_authenticated:
     # 最新順に並び替え
-    words_all = Word.objects.all().order_by("-created_at")
+        words_all = Word.objects.filter(user=request.user).order_by("-created_at")
+    else:
+        words_all = Word.objects.none()
     
     # 1ページ10個に設定
     paginator = Paginator(words_all, 10)
@@ -83,5 +86,19 @@ def word_edit(request, word_id):
     return render(
         request,
         "words/edit.html",
-        {"form": form, "tags_str": tags_str}
+        {"form": form, "tags_str": tags_str, "word": word}
     )
+
+# words/views.py の一番下へ
+
+def word_delete(request, word_id):
+    # 自分の投稿だけを削除できるように取得（セキュリティ対策）
+    word = get_object_or_404(Word, id=word_id, user=request.user)
+    
+    if request.method == "POST":
+        word.delete()
+        # 削除が終わったら一覧画面へ戻る
+        return redirect("words:word_list")
+    
+    # POST以外（URL直接入力など）で来たら、詳細画面に戻す安全策
+    return redirect("words:word_detail", word_id=word_id)
