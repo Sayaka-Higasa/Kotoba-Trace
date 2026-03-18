@@ -1,27 +1,95 @@
 {% extends "base.html" %}
-{% block title %}設定{% endblock %}
+
+{% block title %}設定 - Kotoba Trace{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 全体のコンテナ */
+    .settings-container {
+        width: 92%;
+        max-width: 40rem;
+        margin: 0 auto;
+        text-align: left;
+        padding-top: 1rem;
+    }
+
+    /* 各項目のまとまり */
+    .settings-group {
+        margin-bottom: 2rem;
+    }
+
+    /* ラベル */
+    .settings-label {
+        font-size: 0.8125rem;
+        color: #9ca3af;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    /* 値とボタンの並び */
+    .settings-value {
+        font-size: 1.0625rem;
+        color: #1f2937;
+        display: flex;
+        justify-content: space-between;
+        align-items: center; /* ボタンの高さに合わせる */
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 0.75rem;
+    }
+
+    /* 変更ボタンのサイズ微調整（baseのbtnクラスをベースにする） */
+    .settings-value .btn {
+        font-size: 0.8125rem; /* 13px相当 */
+        padding: 0.4rem 0.8rem;
+        min-width: 4rem;
+    }
+
+    /* ログアウトボタンのサイズ微調整 */
+    .logout-btn {
+        display: inline-block;
+        min-width: 8rem;
+        padding: 0.6rem 1.2rem; 
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
+<div class="settings-container">
+    <h2 style="text-align: center; color: #4b5563; margin-bottom: 2rem; font-size: 1.25rem;">設定</h2>
 
-    <p>ユーザー名<br>
-    {{ request.user.username }}
-    </p>
+    <div class="settings-group">
+        <div class="settings-label">ユーザー名</div>
+        <div class="settings-value">
+            {{ request.user.username }}
+            </div>
+    </div>
 
-    <p>メールアドレス <br>
-    {{ request.user.email}}
-    <a href="{% url 'accounts:email_change' %}">変更</a>
-    </p>
-<br>
-<p>パスワード <br>
-●●●●●●●●●●
-<a href="{% url 'accounts:password_change' %}">変更</a>
-</p>
-    <form action="{% url 'accounts:logout' %}" method="post" style="margin-top: 30px;">
-        {% csrf_token %}
-        <button type="submit" style="background: none; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
-            ログアウト
-        </button>
-    </form>
+    <div class="settings-group">
+        <div class="settings-label">メールアドレス</div>
+        <div class="settings-value">
+            {{ request.user.email }}
+            <a href="{% url 'accounts:email_change' %}" class="btn btn-primary">変更</a>
+        </div>
+    </div>
 
+    <div class="settings-group">
+        <div class="settings-label">パスワード</div>
+        <div class="settings-value">
+            ●●●●●●●●●●
+            <a href="{% url 'accounts:password_change' %}" class="btn btn-primary">変更</a>
+        </div>
+    </div>
 
+    <div style="text-align: center; margin-top: 4rem;">
+        <form action="{% url 'accounts:logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger logout-btn">
+                ログアウト
+            </button>
+        </form>
+    </div>
+</div>
+
+{% include "nav.html" %}
 {% endblock %}
