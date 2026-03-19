@@ -22,6 +22,5 @@ urlpatterns = [
     #設定画面
     path("settings/", views.settings_view,name="settings"),
     path ("email-change/",views.email_change, name="email_change"),
-    path("password_change/", auth_views.PasswordChangeView.as_view(
-        template_name="accounts/password_change.html"
-    ),name="password_change"),]
+    path("password_change/",views.MyPasswordChangeView.as_view(),
+         name = "password_change"),]
