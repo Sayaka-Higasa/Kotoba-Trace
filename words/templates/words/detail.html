@@ -5,40 +5,39 @@
 
 {% block extra_css %}
 <style>
-    /* 全体のコンテナ */
     .detail-container {
-        width: 100%;              /* ← 変更（安定） */
+        width: 100%;              
         max-width: 40rem;
         margin: 0 auto;
-        padding: 0 1rem;          /* ← 追加（左右余白） */
+        padding: 0 1rem;          
         text-align: left;
     }
 
-    /* 上部アクションボタン */
+    /* 上部アクションボタン（並び順） */
     .actions {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap;          /* ← 追加（折り返し） */
-        gap: 0.5rem;              /* ← 追加（余白） */
+        flex-wrap: wrap;          
+        gap: 0.5rem;             
         margin: 1.25rem 0;
     }
 
-    /* ボタン */
+    /* 上部アクションボタン（サイズ、色） */
     .actions a {
         min-width: 4rem;
         text-align: center;
         text-decoration: none;
         font-size: 0.875rem;
         flex: none;
-        padding: 0.5rem 0.75rem;                  /* ← 追加（バランスよく広がる） */
+        padding: 0.5rem 0.75rem;                  
     }
 
     /* カード */
     .word_card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        padding: 1.25rem;         /* ← 少しだけ軽く */
+        padding: 1.25rem;         
         border-radius: 1rem;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         margin-bottom: 6rem;
@@ -60,7 +59,7 @@
         line-height: 1.7;
         margin: 0;
         white-space: pre-wrap;
-        word-break: break-word; /* ← 追加（はみ出し防止） */
+        word-break: break-word; 
     }
 
     /* 公開設定 */
