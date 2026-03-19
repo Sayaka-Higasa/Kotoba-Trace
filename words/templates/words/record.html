@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}ことばを記録する - Kotoba Trace{% endblock %}
+{% block title %}ことばを記録する{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -41,7 +41,7 @@
 
 {% block content %}
 <div class="form-container">
-    <h2 style="text-align: center; color: #4b5563; margin-bottom: 30px;">ことばを記録する</h2>
+    <h3 style="text-align: center; color: #4b5563; margin-bottom: 30px;">ことばを記録する</h3>
 
     <form method="POST">
         {% csrf_token %}
