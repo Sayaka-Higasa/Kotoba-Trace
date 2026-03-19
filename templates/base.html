@@ -115,6 +115,14 @@
             border-radius: 0.5rem;
             font-size: 0.875rem; 
         }
+
+        .alert-message.success{
+            color: #166534;
+        }
+
+        .alert-message.error{
+            color: #991b1b;
+        }
     </style>
 
     {% block extra_css %}{% endblock %}
@@ -127,11 +135,11 @@
 
     <div id="content">
         {% if messages %}
-            <div class="alert-message">
-                {% for message in messages %}
-                    <p style="margin: 0;">{{ message }}</p>
-                {% endfor %}
-            </div>
+            {% for message in messages %}
+                <div class="alert-message {{ message.tags}}">
+                    {{ message }}
+                </div> 
+            {% endfor %}
         {% endif %}
 
         {% block content %}{% endblock %}
