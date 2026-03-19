@@ -42,4 +42,7 @@ def results(request):
             ).distinct()
         words = words.order_by("-created_at")
 
+        if request.user.is_authenticated:
+            words = words.exclude(user=request.user)
+
     return render(request, 'search/results.html', {'words': words, 'query': query})
