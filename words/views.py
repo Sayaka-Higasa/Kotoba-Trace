@@ -22,6 +22,8 @@ def word_list(request):
 
 # --- 記録ページ (表示と保存を1つに統合) ---
 def word_record(request):
+    success_message = None
+
     if request.method == "POST":
         # 保存処理を実行
         word = Word.objects.create(
@@ -38,15 +40,16 @@ def word_record(request):
         if tags_text:
             tags = tags_text.split()
             for tag_name in tags:
-                # データベース保存前に # を削る（##表示対策）
+                # データベース保存前に # を削る
                 clean_name = tag_name.lstrip('#')
                 if clean_name:
-                    tag, created = Tag.objects.get_or_create(name=clean_name)
+                    tag, _ = Tag.objects.get_or_create(name=clean_name)
                     word.tags.add(tag)
 
-        return render(request, "words/record.html", {"message": "保存が完了しました！"})
+        success_message = "保存が完了しました！"
+
+        return render(request, "words/record.html", {"success_message": "保存が完了しました！"})
     
-    # POSTではない(ただページを開いた)場合は、入力フォームを表示
     return render(request, "words/record.html")
 
 
@@ -89,8 +92,6 @@ def word_edit(request, word_id):
         {"form": form, "tags_str": tags_str, "word": word}
     )
 
-# words/views.py の一番下へ
-
 def word_delete(request, word_id):
     # 自分の投稿だけを削除できるように取得（セキュリティ対策）
     word = get_object_or_404(Word, id=word_id, user=request.user)
@@ -100,5 +101,5 @@ def word_delete(request, word_id):
         # 削除が終わったら一覧画面へ戻る
         return redirect("words:word_list")
     
-    # POST以外（URL直接入力など）で来たら、詳細画面に戻す安全策
+    # POST以外（URL直接入力など）で来たら、詳細画面に戻す
     return redirect("words:word_detail", word_id=word_id)
