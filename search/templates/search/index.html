@@ -3,7 +3,7 @@
 {% block content %}
 
 <div style="text-align: left; padding: 20px;">
-    <h2>キーワードから探す</h2>
+    <h3>キーワードから探す</h3>
 
     <form method="GET" action="{% url 'search:results' %}">
         <input type="search" 
@@ -15,7 +15,7 @@
 
     {% if random_words %}
     <br>
-    <h3>今だれかが記録したことば</h3>
+    <h4>今だれかが記録したことば</h4>
     <br>
 
     <main>
