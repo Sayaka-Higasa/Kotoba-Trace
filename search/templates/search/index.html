@@ -32,10 +32,14 @@
             タグ<br>
             {% for tag in word.tags.all %}
                 <a href="{% url 'search:results' %}?q=%23{{ tag.name|cut:'#' }}" 
-                   style="text-decoration: none; color: inherit; display: inline-block; margin-top: 5px;">
-                    <span style="background: #eee; padding: 2px 6px; border-radius: 4px; border: 1px solid #ddd;">
-                        #{{ tag.name|cut:"#" }}
-                    </span>
+                   style="text-decoration: none; 
+                   color: #000; 
+                   display: inline-block; 
+                   margin-top: 5px;"
+                   onmouseover = "this.style.color="#55d383"; this.style.textDecoration = "underline";"
+                   onmouseout = "this.style.color = "#ooo"; this.style.textDecoration = "none";">
+                    #{{ tag.name|cut:"#" }}
+
                 </a>
             {% endfor %}
         </p>
