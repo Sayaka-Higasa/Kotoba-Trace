@@ -3,6 +3,7 @@ from .models import Word, Tag
 from .forms import WordForm
 from django.core.paginator import Paginator
 
+
 # --- 一覧ページ (10個ずつ表示) ---
 def word_list(request):
     if request. user.is_authenticated:
@@ -79,7 +80,7 @@ def word_edit(request, word_id):
                     tag, _ = Tag.objects.get_or_create(name=clean_name)
                     word.tags.add(tag)
                     
-            return redirect("words:word_detail", word_id=word.id)
+            return redirect("words:word_list")
     else:
         form = WordForm(instance=word)
 
