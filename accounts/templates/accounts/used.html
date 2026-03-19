@@ -1,5 +1,19 @@
-<h1>このリンクはすでに使用されています</h1>
+{% extends "base.html" %}
 
-<a href="{% url 'accounts:login' %}">
-ログイン画面へ
-</a>
+{% block title %}リンク無効{% endblock %}
+
+{% block content %}
+
+<div style="text-align:center; margin-top: 2rem;">
+
+    <h3>このリンクはすでに<br>使用されています</h3>
+
+    <div style="margin-top: 2rem;">
+    <a href="{% url 'accounts:login' %}" class="btn btn-primary" style="font-size: 0.9rem; padding: 0.6rem 1.5rem;">
+        ログイン画面へ
+    </a>
+    </div>
+
+</div>
+
+{% endblock %}
