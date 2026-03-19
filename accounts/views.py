@@ -149,14 +149,17 @@ def email_change(request):
     if request.method == "POST":
         email = request.POST.get("email")
 
-        if User.objects.filter(email=email).exclude(id.request.user.id).exists():
+        if User.objects.filter(email=email).exclude(id=request.user.id).exists():
             messages.error(request,"このメールアドレスは既に登録されています")
-            return redirect("email_change")
+            return redirect("accounts:email_change")
         
         request.user.email = email
         request.user.save()
 
-        return redirect("settings")
+        messages.success(request, "メールアドレスの変更が完了しました!")
+        return redirect("accounts:settings")
+
+        return redirect("accounts:settings")
     return render (request,"accounts/email_change.html")
 
 
