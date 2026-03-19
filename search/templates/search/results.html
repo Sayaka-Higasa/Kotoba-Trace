@@ -1,120 +1,130 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>検索結果 - Kotoba Trace</title>  
-    <link rel="stylesheet" href="{% static 'words/list.css' %}">
-    <style>
-        {% comment %} 下部ナビ  {% endcomment %}
-        .bottom-nav{
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background:white;
-            border-top: 1px solid #ccc;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-        }
+{% extends "base.html" %}
 
-        .bottom-nav a{
-            font-size: 24px;
-            text-decoration: none;
-        }
+{% block title %}検索結果 - Kotoba Trace{% endblock %}
 
-        {% comment %} ヘッダー  {% endcomment %}
-        header{
-            text-align: center;
-            padding: 20px 0;
-            background-color: #f0f0f0;
-        }
+{% block extra_css %}
+<style>
+    .search-info {
+        margin-bottom: 2rem;
+        text-align: left;
+    }
 
-        header h2{
-            margin: 0;
-            font-size: 36px;
-        }
+    .word-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding-bottom: 2rem;
+    }
 
-        {% comment %} main の余白確保  {% endcomment %}
-        main{
-            padding: 20px;
-            {% comment %}  ナビに被らないよう調整 {% endcomment %}
-            padding-bottom: 80px;       
-        }
+    {% comment %} カード本体  {% endcomment %}
+    .word-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        display: block;
+        text-decoration: none !important;   
+        color: #000;                     
+        transition: transform 0.1s, box-shadow 0.2s;
+        position: relative;
+    }
 
-        {% comment %} リンクの見た目  {% endcomment %}
-        .word_card_link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
+    .word-card:active {
+        transform: scale(0.98);
+    }
 
-        .search-info {
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
-     <header>
-        <h2>Kotoba Trace</h2>
-     </header>
+     {% comment %} 全ての文字の下線を一括で消す  {% endcomment %}
+    .word-card * {
+        text-decoration: none !important;
+    }
 
-    <main>
-<div class="search-info" style="margin-bottom: 2rem; text-align: left;">
+    {% comment %} /本文のスタイル  {% endcomment %}
+    .word-content {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #000;
+        margin-bottom: 0.75rem;
+        white-space: pre-wrap;
+    }
+
+    {% comment %} タグのコンテナ  {% endcomment %}
+    .tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+     {% comment %} タグ自体のデザイン {% endcomment %}
+    .tag-item {
+        font-size: 0.8125rem;
+        color: #000 !important; 
+        background: none;       
+        padding: 0;
+        border-radius: 0;
+        display: inline-block;
+        font-weight: 500;
+    }
+
+     {% comment %} タグ反応時の設定  {% endcomment %}
+    .tag-item:hover, 
+    .tag-item:active {
+        color: #55d383 !important; 
+        text-decoration: underline !important; 
+    }
+
+    .empty-message {
+        text-align: center;
+        color: #9ca3af;
+        margin-top: 4rem;
+        font-size: 0.9375rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="search-info">
     <p style="margin-bottom: 0.75rem; color: #4b5563; font-size: 0.9375rem;">
         「<strong>{{ query }}</strong>」の検索結果: <strong>{{ words.count }}</strong> 件
     </p>
     
-    <a href="{% url 'search:index' %}" 
-       style="
-        display: inline-block;
-        background-color: #e5e7eb; /* baseのグレー */
-        color: #000;           /* 濃い文字色 */
-        padding: 0.5rem 1.25rem;   /* 上下左右の余白 */
-        border-radius: 0.5rem;     /* 角丸 */
-        text-decoration: none;     /* 下線を消す */
-        font-size: 0.875rem;       /* 14px相当 */
-        font-weight: bold;         /* 太字 */
-        transition: 0.2s;
-       ">
+    <a href="{% url 'search:index' %}" class="btn btn-secondary" style="font-size: 0.8125rem; padding: 0.5rem 1.25rem;">
         戻る
     </a>
 </div>
 
-        {# 検索結果表示 #}
-        {% for word in words %}
-        <a href="{% url 'words:word_detail' word.id %}" class="word_card_link">
-            <div class="word_card">
-                <p>{{ word.content }}</p>
-                <br>
-                <label>
-                    {{ word.source_type }}
-                    <input type="checkbox" {% if word.is_public %}checked="checked"{% endif %} onclick="return false;">
-                    公開する
-                </label>
+<div class="word-list">
+    {% for word in words %}
+    <div style="position: relative;">
+        <a href="{% url 'words:word_detail' word.id %}" class="word-card">
+            <div class="word-content">
+                {{ word.content }}
+            </div>
+            
+            <div class="tag-container">
+                {% for tag in word.tags.all %}
+                    <object>
+                        <a href="{% url 'search:results' %}?query=%23{{ tag.name|cut:"#" }}"
+                           class="tag-item"
+                           onclick="event.stopPropagation()">
+                            #{{ tag.name }}
+                        </a>
+                    </object>
+                {% endfor %}
             </div>
         </a>
-        {% empty %}
-            <p style="text-align: center; color: #999; margin-top: 50px;">該当することばが見つかりませんでした。</p>
-        {% endfor %}
-    </main>
-
-    {# 下部ナビ #}
-    {% if user.is_authenticated %}
-    <nav class="bottom-nav">
-        <a href="{% url 'words:word_record' %}">🖋</a>
-        <a href="{% url 'search:index' %}">🔍</a>
-        <a href="{% url 'words:word_list' %}">💬</a>
-        <a href="{% url 'accounts:settings' %}">👤</a>
-    </nav>
-    {% else %}
-    <div style="text-align:center; margin-top:20px; padding-bottom: 80px;">
-        <a href="{% url 'accounts:login' %}">ログイン</a>
-        <p>ログインするとことばを記録できます</p>
     </div>
-    {% endif %}
+    {% empty %}
+    <div class="empty-message">
+        <p>該当することばが<br>見つかりませんでした。</p>
+        <a href="{% url 'search:index' %}" class="btn btn-primary" style="margin-top: 1.5rem; font-size: 0.875rem;">
+            再検索
+        </a>
+    </div>
+    {% endfor %}
+</div>
 
-</body>
-</html>
+{% include "nav.html" %}
+{% endblock %}
