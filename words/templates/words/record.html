@@ -82,8 +82,15 @@
             <p style="font-size: 12px; color: #6b7280; margin: 5px 0 0 24px;">※チェックを外すと非公開となります。</p>
         </div>
 
+        {% if success_message %}
+            <p style = "color: #4ade80; font-weight: bold; text-align:center; margin-bottom: 20px">
+                {{ success_message }}
+            </p>
+        {% endif %}
+
+
         <div style="text-align: center; margin-top: 40px;">
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 18px;">
+            <button type="submit" class="btn btn-primary" style="width: 200px; padding: 10px; font-size: 16px;">
                 保存
             </button>
         </div>
