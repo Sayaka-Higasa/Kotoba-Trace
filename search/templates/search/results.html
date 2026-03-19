@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}検索結果 - Kotoba Trace{% endblock %}
+{% block title %}検索結果 {% endblock %}
 
 {% block extra_css %}
 <style>
@@ -14,6 +14,7 @@
         flex-direction: column;
         gap: 1rem;
         padding-bottom: 2rem;
+        align-items: stretch;
     }
 
     {% comment %} カード本体  {% endcomment %}
@@ -21,16 +22,14 @@
         background: #fff;
         border: 1px solid #e5e7eb;
         border-radius: 0.75rem;
-        padding: 1.25rem;
+        padding: 0.75rem 1rem;
         display: block;
         text-decoration: none !important;   
         color: #000;                     
         transition: transform 0.1s, box-shadow 0.2s;
         position: relative;
-    }
-
-    .word-card:active {
-        transform: scale(0.98);
+        text-align: left !important;
+        width: 100%;
     }
 
      {% comment %} 全ての文字の下線を一括で消す  {% endcomment %}
@@ -41,18 +40,26 @@
     {% comment %} /本文のスタイル  {% endcomment %}
     .word-content {
         font-size: 1rem;
-        line-height: 1.6;
+        line-height: 1.8;
         color: #000;
         margin-bottom: 0.75rem;
         white-space: pre-wrap;
+        text-align: left !important;
+        display: block;
     }
+
+    .word-content p {
+        margin: 0;
+    }
+
 
     {% comment %} タグのコンテナ  {% endcomment %}
     .tag-container {
         display: flex;
         flex-wrap: wrap;
+        justify-content: flex-start !important;
         gap: 0.75rem;
-        margin-top: 0.5rem;
+        margin-top: 0.25rem;
         position: relative;
         z-index: 2;
     }
@@ -98,23 +105,21 @@
 <div class="word-list">
     {% for word in words %}
     <div style="position: relative;">
-        <a href="{% url 'words:word_detail' word.id %}" class="word-card">
-            <div class="word-content">
-                {{ word.content }}
+        <div class="word-card" onclick="location.href='{% url 'words:word_detail' word.id %}'">
+            <div class="word-content" >
+                <p>{{ word.content }}</p>
             </div>
             
             <div class="tag-container">
                 {% for tag in word.tags.all %}
-                    <object>
-                        <a href="{% url 'search:results' %}?query=%23{{ tag.name|cut:"#" }}"
-                           class="tag-item"
-                           onclick="event.stopPropagation()">
-                            #{{ tag.name }}
-                        </a>
-                    </object>
+                    <a href="{% url 'search:results' %}?query=%23{{ tag.name|cut:"#" }}"
+                        class="tag-item"
+                        onclick="event.stopPropagation()">
+                        #{{ tag.name }}
+                    </a>
                 {% endfor %}
             </div>
-        </a>
+        </div>
     </div>
     {% empty %}
     <div class="empty-message">
