@@ -1,16 +1,19 @@
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset= "UTF-8">
-        <title>新規登録 </title>       
-    </head>
+{% extends "base.html" %}
 
-<body>
-    <header>
-        <h1 style="text-align:center">Kotoba Trace</h1>
-    </header>
-    <div  style = "text-align: center">
-        
+{% block title %}新規登録{% endblock %}
+
+{% block content %}
+
+{% for field in form %}
+    {% for error in field.errors %}
+        <p style="color: red;">
+            {{ field.label }}：{{ error }}
+        </p>
+    {% endfor %}
+{% endfor %}
+
+<div style="text-align: center; margin-top: 2rem;">
+
     <form method="post">
     {% csrf_token %}
 
@@ -18,37 +21,41 @@
         <p style="color: red">{{error}}</p>
     {% endfor %}
 
-
     <p>
-    <label for = "id_username">ユーザー名</label><br>
+    <label for="id_username">ユーザー名</label><br>
     {{form.username}}
     </p>
 
     <p>
-    <label for = "id_email">メールアドレス</label><br>
+    <label for="id_email">メールアドレス</label><br>
     {{form.email}}
     </p>
 
     <p>
-    <label for = "id_password1">パスワード(10文字以上、英数字を含む)</label>
+    <label for="id_password1">パスワード<br>(10文字以上、英数字を含む)</label>
     <br>
     {{form.password1}}
     </p>
 
     <p>
-    <label for = "id_password2">パスワード再入力</label><br>
+    <label for="id_password2">パスワード再入力</label><br>
     {{form.password2}}
     </p>
 
     <p>
-    <button type = "submit">登録</button>
+    <button type="submit" class="btn btn-primary" style="font-size: 0.9rem;">
+        登録
+    </button>
     </p>
     <br>
 
-    <a href="{% url 'accounts:login' %}">ログイン画面へ戻る</a>
+    <a href="{% url 'accounts:login' %}">
+        ログイン画面へ戻る
+    </a>
 
     </form>
 
+</div>
 
-    </div>
 
+{% endblock %}
