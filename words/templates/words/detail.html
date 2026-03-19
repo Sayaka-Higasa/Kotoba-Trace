@@ -88,7 +88,10 @@
 <div class="detail-container">
     <div class="actions">
         <a href="javascript:history.back()" class="btn btn-secondary">戻る</a>
-        <a href="{% url 'words:word_edit' word.id %}" class="btn btn-primary">編集</a>
+
+        {% if user.is_authenticated and word.user == user %}
+            <a href="{% url 'words:word_edit' word.id %}" class="btn btn-primary">編集</a>
+        {% endif %}
     </div>
 
     <div class="word_card">
