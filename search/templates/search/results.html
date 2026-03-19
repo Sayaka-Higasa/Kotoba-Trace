@@ -6,7 +6,7 @@
     <title>検索結果 - Kotoba Trace</title>  
     <link rel="stylesheet" href="{% static 'words/list.css' %}">
     <style>
-        /* 下部ナビ */
+        {% comment %} 下部ナビ  {% endcomment %}
         .bottom-nav{
             position: fixed;
             bottom: 0;
@@ -24,7 +24,7 @@
             text-decoration: none;
         }
 
-        /* ヘッダー */
+        {% comment %} ヘッダー  {% endcomment %}
         header{
             text-align: center;
             padding: 20px 0;
@@ -36,13 +36,14 @@
             font-size: 36px;
         }
 
-        /* main の余白確保 */
+        {% comment %} main の余白確保  {% endcomment %}
         main{
             padding: 20px;
-            padding-bottom: 80px; /* ナビに被らないよう調整 */
+            {% comment %}  ナビに被らないよう調整 {% endcomment %}
+            padding-bottom: 80px;       
         }
 
-        /* リンクの見た目を整える */
+        {% comment %} リンクの見た目  {% endcomment %}
         .word_card_link {
             text-decoration: none;
             color: inherit;
@@ -61,12 +62,28 @@
      </header>
 
     <main>
-        <div class="search-info">
-            <p>「<strong>{{ query }}</strong>」の検索結果: {{ words.count }} 件</p>
-            <a href="{% url 'search:index' %}" style="color: #007bff; text-decoration: none;">← 再検索する</a>
-        </div>
+<div class="search-info" style="margin-bottom: 2rem; text-align: left;">
+    <p style="margin-bottom: 0.75rem; color: #4b5563; font-size: 0.9375rem;">
+        「<strong>{{ query }}</strong>」の検索結果: <strong>{{ words.count }}</strong> 件
+    </p>
+    
+    <a href="{% url 'search:index' %}" 
+       style="
+        display: inline-block;
+        background-color: #e5e7eb; /* baseのグレー */
+        color: #000;           /* 濃い文字色 */
+        padding: 0.5rem 1.25rem;   /* 上下左右の余白 */
+        border-radius: 0.5rem;     /* 角丸 */
+        text-decoration: none;     /* 下線を消す */
+        font-size: 0.875rem;       /* 14px相当 */
+        font-weight: bold;         /* 太字 */
+        transition: 0.2s;
+       ">
+        戻る
+    </a>
+</div>
 
-        {# 検索結果の表示を一覧画面のカード形式に合わせました #}
+        {# 検索結果表示 #}
         {% for word in words %}
         <a href="{% url 'words:word_detail' word.id %}" class="word_card_link">
             <div class="word_card">
@@ -84,7 +101,7 @@
         {% endfor %}
     </main>
 
-    {# 下部ナビの移植 #}
+    {# 下部ナビ #}
     {% if user.is_authenticated %}
     <nav class="bottom-nav">
         <a href="{% url 'words:word_record' %}">🖋</a>
