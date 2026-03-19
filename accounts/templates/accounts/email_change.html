@@ -42,12 +42,26 @@
         margin-bottom: 1.5rem;
     }
 
-    
     .save-btn {
         display: inline-block;
         min-width: 7rem;      
         padding: 0.6rem 1.5rem;
         font-size: 0.9375rem; 
+    }
+
+    /* メッセージ用 */
+    .messages {
+        margin-bottom: 1.5rem;
+    }
+    .messages .error {
+        color: #b91c1c;  /* 赤 */
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    .messages .success {
+        color: #16a34a;  /* 緑 */
+        font-weight: bold;
+        margin-bottom: 0.5rem;
     }
 </style>
 {% endblock %}
@@ -61,6 +75,9 @@
     </div>
 
     <h2 style="text-align: center; color: #4b5563; margin-bottom: 2rem; font-size: 1.25rem;">メールアドレス変更</h2>
+
+    <!-- メッセージ表示 -->
+
 
     <form method="POST">
         {% csrf_token %}
