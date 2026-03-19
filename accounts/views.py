@@ -15,6 +15,9 @@ from django .contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib import messages
+from django.urls import reverse_lazy
 
 
 # ログイン
@@ -162,4 +165,11 @@ def email_change(request):
         return redirect("accounts:settings")
     return render (request,"accounts/email_change.html")
 
+# パスワード変更
+class MyPasswordChangeView(PasswordChangeView):
+    template_name = "accounts/password_change.html"
+    success_url = reverse_lazy("accounts:settings")  
 
+    def form_valid(self, form):
+        messages.success(self.request, "パスワードの変更が完了しました!")
+        return super().form_valid(form)
