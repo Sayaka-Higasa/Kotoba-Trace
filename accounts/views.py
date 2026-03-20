@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib. auth. forms import AuthenticationForm
 from django.contrib. auth import authenticate
-from django. contrib. auth. models import User
+from django.contrib.auth import get_user_model
 from django import forms
 from django.contrib.auth import login
 from .forms import SignUpForm
@@ -12,39 +12,42 @@ from.models import PasswordReset
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django .contrib.auth.decorators import login_required
-from django.shortcuts import render
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
-from django.contrib import messages
 from django.urls import reverse_lazy
+from django.contrib.auth import login as auth_login
+from django import forms
+from django.contrib.auth import get_user_model, authenticate
+from .forms import MyPasswordChangeForm
+User = get_user_model()
 
 
-# ログイン
-class EmailLoginForm(AuthenticationForm):
-    #ユーザー名欄をメールアドレス用として定義
-    username = forms.EmailField(label="Email")
+class EmailLoginForm(forms.Form):
+    email = forms.EmailField(label="メールアドレス")
+    password = forms.CharField(label="パスワード", widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        self.user_cache = None
+        super().__init__(*args, **kwargs)
 
     def clean(self):
-        email = self. cleaned_data.get("username")
-        password = self. cleaned_data.get( "password")
-        if email and password :
+        email = self.cleaned_data.get("email")
+        password = self.cleaned_data.get("password")
+        if email and password:
             try:
-                #メアドからユーザーを探す
                 user_obj = User.objects.get(email=email)
-                #見つかったユーザーのユーザー名を使って認証
-                self.user_cache = authenticate(
-                    self.request, 
-                    username = user_obj.username,
-                    password = password
-                )
+                user = authenticate(email=user_obj.email, password=password)
+                if user is None:
+                    raise forms.ValidationError("メールアドレスまたはパスワードが正しくありません")
+                self.user_cache = user
             except User.DoesNotExist:
                 raise forms.ValidationError("メールアドレスまたはパスワードが正しくありません")
-            self.user_cache = authenticate(username=user_obj.username, password = password)
-            if self.user_cache is None:
-                raise forms.ValidationError("メールアドレスまたはパスワードが正しくありません")
         return self.cleaned_data
-    
+
+    def get_user(self):
+        return self.user_cache
+
     #新規登録、自動ログイン
 def signup_view(request):
     if request.method == "POST":
@@ -57,6 +60,17 @@ def signup_view(request):
     else:
         form = SignUpForm()
     return render (request, "accounts/signup.html", {"form": form})
+
+def login_view(request):
+    if request.method == "POST":
+        form = EmailLoginForm(request.POST, request=request) # requestを渡す
+        if form.is_valid():
+            user = form.get_user()
+            auth_login(request, user)
+            return redirect("/")
+    else:
+        form = EmailLoginForm()
+    return render(request, "accounts/login.html", {"form": form})
 
 #メアド入力、メール送信
 def password_reset_request(request):
@@ -88,7 +102,7 @@ def password_reset_request(request):
         except User.DoesNotExist:
             pass  # 存在しなくても何もせず「送信しました」画面にする
 
-        # POSTなら必ず「送信しました」画面に飛ばす
+        # POSTなら送信しました画面に飛ばす
         return render(request, "accounts/password_reset_sent.html")
 
     # GETのときはメール入力フォームを表示
@@ -162,13 +176,13 @@ def email_change(request):
         messages.success(request, "メールアドレスの変更が完了しました!")
         return redirect("accounts:settings")
 
-        return redirect("accounts:settings")
     return render (request,"accounts/email_change.html")
 
 # パスワード変更
 class MyPasswordChangeView(PasswordChangeView):
     template_name = "accounts/password_change.html"
     success_url = reverse_lazy("accounts:settings")  
+    form_class = MyPasswordChangeForm
 
     def form_valid(self, form):
         messages.success(self.request, "パスワードの変更が完了しました!")
