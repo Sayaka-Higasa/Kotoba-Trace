@@ -73,13 +73,13 @@
 
     <h2 style="text-align: center; color: #4b5563; margin-bottom: 30px;">ことばを編集する</h2>
 
-    <form method="POST">
+    <form method="POST" novalidate>
         {% csrf_token %}
 
         {% if form.errors %}
             <div style="background: #fee; color: #b91c1c; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
-                <strong>エラーが発生しています：</strong><br>
-                {{ form.errors }}
+                {{ form.content.errors }}
+                {{ form.source_type.errors }}
             </div>
         {% endif %}
 
