@@ -9,11 +9,7 @@ class PasswordReset(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    password_token = models.UUIDField(
-        default=uuid.uuid4,
-        editable=False,
-        unique=True
-    )
+    password_token = models.CharField(max_length=255, unique=True, default=uuid.uuid4)
 
     password_expiry = models.DateTimeField()
 
