@@ -94,7 +94,7 @@ def word_edit(request, word_id):
     )
 
 def word_delete(request, word_id):
-    # 自分の投稿だけを削除できるように取得（セキュリティ対策）
+    # 自分の投稿だけを削除できるように取得
     word = get_object_or_404(Word, id=word_id, user=request.user)
     
     if request.method == "POST":
