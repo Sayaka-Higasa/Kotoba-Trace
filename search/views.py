@@ -33,7 +33,7 @@ def results(request):
                 tags__name__icontains=tag_keyword
             ).distinct()
         else:
-            # キーワード検索（本文 OR 出典）
+            # キーワード検索
             words = Word.objects.filter(
                 Q(content__icontains=query) | 
                 Q(source_type__icontains=query) |
