@@ -4,7 +4,7 @@
 
 {% block extra_css %}
 <style>
-    /* 全体のコンテナ */
+    /* 全体のレイアウト */
     .settings-container {
         width: 92%;
         max-width: 40rem;
@@ -18,7 +18,7 @@
         margin-bottom: 2rem;
     }
 
-    /* ラベル */
+    /* 見出し */
     .settings-label {
         font-size: 0.8125rem;
         color: #9ca3af;
@@ -26,20 +26,20 @@
         margin-bottom: 0.5rem;
     }
 
-    /* 値とボタンの並び */
+    /* ボタンを横に置く */
     .settings-value {
         font-size: 1.0625rem;
         color: #1f2937;
         display: flex;
         justify-content: space-between;
-        align-items: center; /* ボタンの高さに合わせる */
+        align-items: center; 
         border-bottom: 1px solid #e5e7eb;
         padding-bottom: 0.75rem;
     }
 
-    /* 変更ボタンのサイズ微調整（baseのbtnクラスをベースにする） */
+    /* 変更ボタンのサイズ微調整*/
     .settings-value .btn {
-        font-size: 0.8125rem; /* 13px相当 */
+        font-size: 0.8125rem; 
         padding: 0.4rem 0.8rem;
         min-width: 4rem;
     }
