@@ -4,6 +4,20 @@
 
 {% block extra_css %}
 <style>
+    .alert-message {
+    background: #fee;
+    color: #b91c1c;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
     .form-container {
         width: 92%;
         max-width: 31.25rem;
@@ -78,8 +92,14 @@
 
 
 
-    <form method="POST">
+    <form method="POST" novalidate>
         {% csrf_token %}
+
+        {% if form.errors %}
+            <div class= "alert-message">
+                {{ form.email.errors }}
+            </div>
+            {% endif %}
 
         <div class="form-group">
             <label class="form-label">現在のメールアドレス</label>
@@ -88,7 +108,7 @@
         
         <div class="form-group">
             <label class="form-label">新しいメールアドレス</label>
-            <input type="email" name="email" class="form-input" required >
+            <input type="email" name="email" class="form-input"  >
         </div>
 
         <div style="text-align: center; margin-top: 2.5rem;">

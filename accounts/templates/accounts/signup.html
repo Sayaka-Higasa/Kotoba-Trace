@@ -1,25 +1,40 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+<style>
+.alert-message {
+    background: #fee;
+    color: #b91c1c;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+</style>
+{% endblock %}
+
 {% block title %}新規登録{% endblock %}
 
 {% block content %}
 
-{% for field in form %}
-    {% for error in field.errors %}
-        <p style="color: red;">
-            {{ field.label }}：{{ error }}
-        </p>
-    {% endfor %}
-{% endfor %}
-
 <div style="text-align: center; margin-top: 2rem;">
 
-    <form method="post">
-    {% csrf_token %}
-
-    {% for error in form.password1.errors %}
-        <p style="color: red">{{error}}</p>
-    {% endfor %}
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class = "alert-message">
+                {{ form.non_field_errors }}
+                {{ form.name.errors }}
+                {{ form.email.errors }}
+                {{ form.password1.errors }}
+                {{ form.password2.errors }}
+            </div>
+        {% endif %}
 
     <p>
     <label for="id_name">ユーザー名</label><br>

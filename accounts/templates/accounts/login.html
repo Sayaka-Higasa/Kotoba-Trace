@@ -1,35 +1,57 @@
 {% extends "base.html" %} 
 {% block title %}ログイン{% endblock %}
 
+{% block extra_css %}
+<style>
+.alert-message {
+    background: #fee;
+    color: #b91c1c;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+</style>
+{% endblock %}
+
 {% block content %}  
-    <div style="margin-top: 40px; text-align: center;">
-        <h3>ことばを記録するには</h3>
-        <h3>ログインが必要です</h3>
-    </div>
+<div style="margin-top: 40px; text-align: center;">
+    <h3>ことばを記録するには</h3>
+    <h3>ログインが必要です</h3>
+</div>
 
-    <form method="post" style="margin-top: 30px;">
-        {% csrf_token %}
+<form method="post" novalidate style="margin-top: 30px;">
+    {% csrf_token %}
 
-        {% if form.non_field_errors %}
-            <div style="color: red;">
-                {{ form.non_field_errors }}
-            </div>
-        {% endif %}
-
-        <div style="text-align:center">
-            <label for="id_email">メールアドレス</label><br>
-            {{ form.email }}
-            <br><br>
-            <label for="id_password">パスワード</label><br>
-            {{ form.password }}
-            <br>
-            <p>
-                <a href="{% url 'accounts:password_reset' %}">パスワードを忘れた方はこちら</a>
-            </p>
-            
-            <button type="submit" class="btn btn-primary">ログイン</button> 
-            <br><br>
-            <a href="{% url 'accounts:signup' %}">アカウント登録</a>
+    {% if form.errors %}
+        <div class="alert-message">
+            {{ form.non_field_errors }}
+            {{ form.email.errors }}
+            {{ form.password.errors }}
         </div>
-    </form>
-{% endblock %} 
+    {% endif %}
+
+    <div style="text-align:center">
+        <label for="id_email">メールアドレス</label><br>
+        {{ form.email }}
+        <br><br>
+
+        <label for="id_password">パスワード</label><br>
+        {{ form.password }}
+        <br>
+
+        <p>
+            <a href="{% url 'accounts:password_reset' %}">パスワードを忘れた方はこちら</a>
+        </p>
+
+        <button type="submit" class="btn btn-primary">ログイン</button> 
+        <br><br>
+        <a href="{% url 'accounts:signup' %}">アカウント登録</a>
+    </div>
+</form>
+{% endblock %}

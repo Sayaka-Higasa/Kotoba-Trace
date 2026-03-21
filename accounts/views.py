@@ -164,19 +164,30 @@ def settings_view(request):
 @login_required
 def email_change(request):
     if request.method == "POST":
-        email = request.POST.get("email")
+        form = EmailChangeForm(request.POST)
 
-        if User.objects.filter(email=email).exclude(id=request.user.id).exists():
-            messages.error(request,"このメールアドレスは既に登録されています")
-            return redirect("accounts:email_change")
-        
-        request.user.email = email
-        request.user.save()
+        if form.is_valid():
+            email = form.cleaned_data["email"]
 
-        messages.success(request, "メールアドレスの変更が完了しました!")
-        return redirect("accounts:settings")
+            if User.objects.filter(email=email).exclude(id=request.user.id).exists():
+                messages.error(request,"このメールアドレスは既に登録されています")
+                return redirect("accounts:email_change")
+            
+            request.user.email = email
+            request.user.save()
 
-    return render (request,"accounts/email_change.html")
+            messages.success(request, "メールアドレスの変更が完了しました!")
+            return redirect("accounts:settings")
+
+    else:
+        form = EmailChangeForm()
+    
+    return render(request, "accounts/email_change.html", {"form": form})
+
+
+class EmailChangeForm(forms.Form):
+    email = forms.EmailField(required=True)
+
 
 # パスワード変更
 class MyPasswordChangeView(PasswordChangeView):
