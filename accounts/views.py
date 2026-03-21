@@ -144,6 +144,7 @@ def password_reset_confirm(request,token):
                 {"error": e.messages[0]}
             )
            
+        #パスワード変更、
         user = reset.user
         user.set_password(password)
         user.save()
@@ -151,9 +152,9 @@ def password_reset_confirm(request,token):
         reset.is_used = True
         reset.save()
 
-        return redirect("accounts:login")
+        return redirect("accounts:password_reset_complete")
     
-    return render(request,"accounts/password_reset_confirm.html")
+    return render(request, "accounts/password_reset_confirm.html")
 
 #設定画面
 @login_required
@@ -198,3 +199,7 @@ class MyPasswordChangeView(PasswordChangeView):
     def form_valid(self, form):
         messages.success(self.request, "パスワードの変更が完了しました!")
         return super().form_valid(form)
+
+#パスワード変更完了
+def password_reset_complete(request):
+    return render(request, "accounts/password_reset_complete.html")
