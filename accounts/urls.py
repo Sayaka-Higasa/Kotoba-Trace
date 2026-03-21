@@ -19,6 +19,9 @@ urlpatterns = [
     path("password_reset/" , views.password_reset_request , name = "password_reset"),
     path("reset/<uuid:token>/", views.password_reset_confirm, name= "password_reset_confirm"),
 
+     #パスワード再設定完了
+    path('reset/complete/', views.password_reset_complete, name='password_reset_complete'),
+
     #設定画面
     path("settings/", views.settings_view,name="settings"),
     path ("email-change/",views.email_change, name="email_change"),
