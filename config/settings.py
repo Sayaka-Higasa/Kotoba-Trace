@@ -134,12 +134,10 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# Looking to send emails in production? Check out our Email API/SMTP product!
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = 'cee71bdf0e096a'
-EMAIL_HOST_PASSWORD = '41f5a65aeff569'
-EMAIL_PORT = '2525'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 
 
@@ -148,5 +146,5 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 try:
     from .local_settings import *
-except:
+except ImportError:
     pass
