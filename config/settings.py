@@ -47,8 +47,6 @@ INSTALLED_APPS = [
     "search",
     "words",
     "accounts",
-    
-    
 ]
 
 MIDDLEWARE = [
@@ -150,10 +148,8 @@ try:
 except ImportError:
     pass
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# settings.py の一番最後
-import logging
-logger = logging.getLogger(__name__)
-logger.error("!!! DJANGO SETTINGS RELOADED !!!")
-
 SITE_ID = 1
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+import sys
+print("!!! DJANGO SETTINGS RELOADED SUCCESSFULLY !!!", file=sys.stderr)
