@@ -85,7 +85,7 @@ def password_reset_request(request):
                 password_expiry = timezone.now() + timedelta(hours = 24)
             )
 
-            reset_link = f"http://127.0.0.1:8000/accounts/reset/{reset.password_token}/"
+            reset_link = f"https://kotobatrace.pythonanywhere.com/accounts/reset/{reset.password_token}/"
 
             send_mail(
                 "パスワード再設定のご案内",
