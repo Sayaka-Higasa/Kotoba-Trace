@@ -136,7 +136,6 @@ LOGOUT_REDIRECT_URL = 'accounts:login'
 
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 
@@ -148,3 +147,5 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
