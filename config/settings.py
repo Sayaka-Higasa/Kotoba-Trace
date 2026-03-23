@@ -23,9 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-zunk71!(2mi)yen%=r6(f31!n#407i-+zqe1^ob6rt!0l8pe18'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','.pythonanywhere.com','KotobaTrace.pythonanywhere.com']
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+from django.core.management.utils import get_random_secret_key
+SECRET_KEY = get_random_secret_key()
 
 
 # Application definition
@@ -128,5 +134,19 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Looking to send emails in production? Check out our Email API/SMTP product!
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = 'cee71bdf0e096a'
+EMAIL_HOST_PASSWORD = '41f5a65aeff569'
+EMAIL_PORT = '2525'
+
+
+
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+
+try:
+    from .local_settings import *
+except:
+    pass
