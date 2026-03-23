@@ -142,14 +142,16 @@ LOGOUT_REDIRECT_URL = 'accounts:login'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+SITE_ID = 1
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 
 try:
     from .local_settings import *
 except ImportError:
     pass
 
-SITE_ID = 1
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 import sys
 print("!!! DJANGO SETTINGS RELOADED SUCCESSFULLY !!!", file=sys.stderr)
