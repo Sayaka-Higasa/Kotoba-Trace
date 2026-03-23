@@ -73,7 +73,7 @@
         {% for word in page_obj %}
         <a href="/words/{{ word.id }}" class="word_card_link" style="text-decoration: none; color: inherit; display: block;">
             <div class="word_card">
-                <p>{{ word.content }}</p>
+                <p>{{ word.content | linebreaksbr }}</p>
                 <br>
                 <label>
                     {{ word.source_type }}
