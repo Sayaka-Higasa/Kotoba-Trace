@@ -24,18 +24,31 @@
         border-radius: 0.75rem;
         padding: 0.75rem 1rem;
         display: block;
-        text-decoration: none !important;   
         color: #000;                     
-        transition: transform 0.1s, box-shadow 0.2s;
+        transition: transform 0.15s, box-shadow 0.15s;
+        cursor: pointer;
         position: relative;
         text-align: left !important;
         width: 100%;
     }
 
-     {% comment %} 全ての文字の下線を一括で消す  {% endcomment %}
-    .word-card * {
-        text-decoration: none !important;
+        .word-card:active {
+        transform: scale(0.98);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
+
+    {% comment %} PC用：hoverで軽く浮かせる {% endcomment %}
+.word-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+{% comment %} スマホ用：タップ中に縮む  {% endcomment %}
+.word-card:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+    
 
     {% comment %} /本文のスタイル  {% endcomment %}
     .word-content {
@@ -68,16 +81,22 @@
     .tag-item {
         font-size: 0.8125rem;
         color: #000 !important; 
-        background: none;       
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        transition: color 0.2s, transform 0.15s, opacity 0.15s;      
         padding: 0;
-        border-radius: 0;
         display: inline-block;
         font-weight: 500;
     }
 
-     {% comment %} タグ反応時の設定  {% endcomment %}
-    .tag-item:hover, 
+    {% comment %} タグ押したとき  {% endcomment %}
     .tag-item:active {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+
+     {% comment %} タグ反応時の設定  {% endcomment %}
+    .tag-item:hover{
         color: #55d383 !important; 
         text-decoration: underline !important; 
     }
