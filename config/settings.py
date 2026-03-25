@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-zunk71!(2mi)yen%=r6(f31!n#407i-+zqe1^ob6rt!0l8pe18'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['kotobatrace.pythonanywhere.com', 'www.kotobatrace.pythonanywhere.com']
+ALLOWED_HOSTS = []
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "search",
     "words",
     "accounts",
+    "portfolio"
 ]
 
 MIDDLEWARE = [
