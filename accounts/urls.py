@@ -2,6 +2,8 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from .views import EmailLoginForm, signup_view
 from . import views
+from django.contrib.auth.views import LogoutView
+from django.urls import reverse_lazy
 
 app_name = "accounts"
 urlpatterns = [
@@ -13,8 +15,15 @@ urlpatterns = [
         ),
         name="login"
     ),
-    path("logout/" , auth_views.LogoutView.as_view(), name = "logout"),
+
+   path(
+        'logout/',
+        LogoutView.as_view(next_page=reverse_lazy('search:index')),
+        name='logout'
+    ),
+
     path("signup/", signup_view, name="signup") ,#新規登録 
+    
     #パスワードリセット関連
     path("password_reset/" , views.password_reset_request , name = "password_reset"),
     path("reset/<uuid:token>/", views.password_reset_confirm, name= "password_reset_confirm"),
