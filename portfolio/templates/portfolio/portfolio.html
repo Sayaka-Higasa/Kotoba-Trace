@@ -51,6 +51,15 @@
             <h2>作品3</h2>
             <p>ここに作品の説明を書きます。</p>
         </div>
-    </main>
+
+          <!-- ここから検索画面ボタン -->
+    <div style="text-align:center; margin-top:2rem;">
+        <a href="{% url 'search:index' %}" 
+           style="display:inline-block; padding:1rem 2rem; background-color:#4CAF50; color:white; border-radius:8px; text-decoration:none; font-weight:bold;">
+           検索画面へ
+        </a>
+    </div>
+</main>
+
 </body>
 </html>
