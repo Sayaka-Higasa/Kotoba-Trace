@@ -23,34 +23,33 @@ def word_list(request):
 
 # --- 記録ページ (表示と保存を1つに統合) ---
 def word_record(request):
-    success_message = None  # ← 最初に変数を用意
+    success_message = None
 
     if request.method == "POST":
-        # 保存処理
-        word = Word.objects.create(
-            user=request.user,
-            content=request.POST.get("content"),
-            source_type=request.POST.get("source_type"),
-            source_title=request.POST.get("source_title"),
-            source_creator=request.POST.get("source_creator"),
-            memo=request.POST.get("memo"),
-            is_public=request.POST.get("is_public") == "on"
-        )
+        form = WordForm(request.POST)
+        if form.is_valid():
+            word = form.save(commit=False)
+            word.user = request.user
+            word.save()
 
-        # タグ処理
-        tags_text = request.POST.get("tags")
-        if tags_text:
-            tags = tags_text.split()
-            for tag_name in tags:
-                clean_name = tag_name.lstrip('#')
-                if clean_name:
-                    tag, _ = Tag.objects.get_or_create(name=clean_name)
-                    word.tags.add(tag)
+            # タグ処理
+            tags_text = request.POST.get("tags", "")
+            if tags_text:
+                for tag_name in tags_text.split():
+                    clean_name = tag_name.lstrip('#')
+                    if clean_name:
+                        tag, _ = Tag.objects.get_or_create(name=clean_name)
+                        word.tags.add(tag)
 
-        success_message = "保存が完了しました！"  # ← ここで変数にセット
+            success_message = "保存が完了しました！"
+            form = WordForm()  # 入力クリア
+    else:
+        form = WordForm()
 
-    # GET でも POST でも success_message を渡す
-    return render(request, "words/record.html", {"success_message": success_message})
+    return render(request, "words/record.html", {
+        "form": form,
+        "success_message": success_message
+    })
     
 
 
