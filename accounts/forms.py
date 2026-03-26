@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth. forms import UserCreationForm
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate
 
 User = get_user_model()
 
@@ -69,3 +71,33 @@ class MyPasswordChangeForm(PasswordChangeForm):
             if len(p1) < 10:
                 raise forms.ValidationError("パスワードは10文字以上で入力してください")
         return p1
+
+class CustomAuthenticationForm(AuthenticationForm):
+  
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('username')  
+        password = cleaned_data.get('password')
+
+        if email and password:
+            self.user_cache = authenticate(self.request, username=email, password=password)
+            if self.user_cache is None:
+                self.add_error('username', "メールアドレスまたはパスワードが間違っています")
+                self.add_error('password', "メールアドレスまたはパスワードが間違っています")
+
+        return cleaned_data
+
+class LoginForm(AuthenticationForm):
+    userbame = forms.EmailField(
+        label="メールアドレス",
+        widget = forms.EmailInput(attrs={
+            "class": "form-control",
+        })
+    )
+
+    password = forms.CharField(
+        label="パスワード",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+        })
+    )
