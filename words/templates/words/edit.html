@@ -76,21 +76,21 @@
     <form method="POST" novalidate>
         {% csrf_token %}
 
-        {% if form.errors %}
-            <div style="background: #fee; color: #b91c1c; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
-                {{ form.content.errors }}
-                {{ form.source_type.errors }}
-            </div>
-        {% endif %}
-
         <div class="form-group">
-            <label class="form-label">ことば</label>
+            <label class="form-label">ことば<span style="color:#b91c1c">*</span></label>
             <textarea name="content" class="form-input" style="height: 120px;" required>{{ form.content.value }}</textarea>
+            {% if form.content.errors %}
+                <p style="color:#b91c1c; font-size:14px; margin-top:5px;">{{ form.content.errors|striptags }}</p>
+            {% endif %}
+
         </div>
 
         <div class="form-group">
-            <label class="form-label">出典 (本・音楽・日常 など)</label>
+            <label class="form-label">出典 (本・音楽・日常 など)<span style="color:#b91c1c">*</span></label>
             <input type="text" name="source_type" class="form-input" value="{{ form.source_type.value|default:'' }}">
+            {% if form.source_type.errors %}
+                <p style="color:#b91c1c; font-size:14px; margin-top:5px;">{{ form.source_type.errors|striptags }}</p>
+            {% endif %}
         </div>
 
         <div class="form-group">
