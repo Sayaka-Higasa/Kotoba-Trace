@@ -26,23 +26,21 @@ def results(request):
     words = Word.objects.none()
 
     if query:
-        if query.startswith('#'):
-            # タグ検索
-            tag_keyword = query.lstrip("#")
-            words = Word.objects.filter(
-                tags__name__icontains=tag_keyword
-            ).distinct()
-        else:
-            # キーワード検索
-            words = Word.objects.filter(
-                Q(content__icontains=query) | 
-                Q(source_type__icontains=query) |
-                Q(source_title__icontains=query) |
-                Q(source_creator__icontains=query)
-            ).distinct()
-        words = words.order_by("-created_at")
+        clean_query = query.lstrip('#')
+        words= Word.objects.filter(
+            Q(tags__name__icontains=clean_query) |      
+            Q(content__icontains=clean_query) |         
+            Q(source_type__icontains=clean_query) |    
+            Q(source_title__icontains=clean_query) |   
+            Q(source_creator__icontains=clean_query)   
+        ).distinct()
 
-        if request.user.is_authenticated:
-            words = words.exclude(user=request.user)
+        #公開されてるものだけ
+        words = words.filter(is_public=True).order_by("-created_at")
 
     return render(request, 'search/results.html', {'words': words, 'query': query})
+
+        #自分の投稿は表示されない
+        # if request.user.is_authenticated:
+        #     words = words.exclude(user=request.user)
+
