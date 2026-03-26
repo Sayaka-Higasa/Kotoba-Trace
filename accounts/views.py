@@ -23,8 +23,18 @@ User = get_user_model()
 
 
 class EmailLoginForm(forms.Form):
-    email = forms.EmailField(label="メールアドレス")
-    password = forms.CharField(label="パスワード", widget=forms.PasswordInput)
+    username = forms.EmailField(
+        label="メールアドレス",
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control' 
+        })
+        )
+    password = forms.CharField(
+        label="パスワード", 
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control"
+        })
+        )
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
@@ -32,12 +42,12 @@ class EmailLoginForm(forms.Form):
         super().__init__(*args, **kwargs)
 
     def clean(self):
-        email = self.cleaned_data.get("email")
+        email = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
         if email and password:
             try:
                 user_obj = User.objects.get(email=email)
-                user = authenticate(email=user_obj.email, password=password)
+                user = authenticate(self.request, email=user_obj.email, password=password)
                 if user is None:
                     raise forms.ValidationError("メールアドレスまたはパスワードが正しくありません")
                 self.user_cache = user
