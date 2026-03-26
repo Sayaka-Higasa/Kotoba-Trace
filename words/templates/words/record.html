@@ -45,6 +45,17 @@
     font-size: 1rem;           
     border-radius: 0.5rem;      
 }
+
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0 0;
+}
+.errorlist li {
+    color: #b91c1c;       
+    font-weight: bold;
+    font-size: 0.875rem;  
+}
 </style>
 {% endblock %}
 
@@ -62,13 +73,27 @@
         {% csrf_token %}
 
         <div class="form-group">
-            <label class="form-label">記録することば</label>
-            <textarea name="content" class="form-input" style="height: 120px;" required></textarea>
+            <label class="form-label">記録することば <span style="color:#b91c1c;">*</span></label>
+            <textarea name="content" class="form-input" style="height:120px;">{{ form.content.value }}</textarea>
+            {% if form.content.errors %}
+                <ul class="errorlist">
+                    {% for error in form.content.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
 
         <div class="form-group">
-            <label class="form-label">出典 (本・音楽・日常 など)</label>
-            <input type="text" name="source_type" class="form-input">
+            <label class="form-label">出典 (本・音楽・日常 など) <span style="color:#b91c1c;">*</span></label>
+            <input type="text" name="source_type" class="form-input" value="{{ form.source_type.value }}">
+            {% if form.source_type.errors %}
+                <ul class="errorlist">
+                    {% for error in form.source_type.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
 
         <div class="form-group">
