@@ -36,6 +36,15 @@
     textarea.form-input {
         resize: vertical;
     }
+
+    .save-btn {
+    width: 100% !important;    
+    display: block;
+    padding: 0.75rem;         
+    font-weight: bold;         
+    font-size: 1rem;           
+    border-radius: 0.5rem;      
+}
 </style>
 {% endblock %}
 
@@ -91,13 +100,13 @@
 
 
 
-        <div style="text-align: center; margin-top: 40px;">
-            <button type="submit" class="btn btn-primary" style="width: 200px; padding: 10px; font-size: 16px;">
+        <div style="margin-top: 40px;">
+            <button type="submit" class="btn btn-primary save-btn">
                 保存
             </button>
         </div>
-    </form>
-</div>
+            </form>
+        </div>
 
 {% include "nav.html" %}
 {% endblock %}
