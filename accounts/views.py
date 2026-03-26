@@ -1,40 +1,25 @@
-from django.shortcuts import render, redirect,reverse
-from django.contrib. auth. forms import AuthenticationForm
-from django.contrib. auth import authenticate
-from django.contrib.auth import get_user_model
+from django.shortcuts import render, redirect, reverse
+from django.contrib.auth import authenticate, login as auth_login, get_user_model
 from django import forms
-from django.contrib.auth import login
-from .forms import SignUpForm
-from django . utils import timezone
+from django.utils import timezone
 from datetime import timedelta
 from django.core.mail import send_mail
-from.models import PasswordReset
+from .models import PasswordReset
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django .contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
-from django.contrib.auth import login as auth_login
-from django import forms
-from django.contrib.auth import get_user_model, authenticate
-from .forms import MyPasswordChangeForm
+from .forms import SignUpForm, MyPasswordChangeForm
+
 User = get_user_model()
 
 
+# ログインフォーム
 class EmailLoginForm(forms.Form):
-    username = forms.EmailField(
-        label="メールアドレス",
-        widget=forms.EmailInput(attrs={
-            'class': 'form-control' 
-        })
-        )
-    password = forms.CharField(
-        label="パスワード", 
-        widget=forms.PasswordInput(attrs={
-            "class": "form-control"
-        })
-        )
+    username = forms.EmailField(label="メールアドレス", widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(label="パスワード", widget=forms.PasswordInput(attrs={"class": "form-control"}))
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
@@ -58,22 +43,22 @@ class EmailLoginForm(forms.Form):
     def get_user(self):
         return self.user_cache
 
-    #新規登録、自動ログイン
+# 新規登録
 def signup_view(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            #ログイン
-            login(request,user)
+            auth_login(request, user)
             return redirect(reverse("search:index"))
     else:
         form = SignUpForm()
-    return render (request, "accounts/signup.html", {"form": form})
+    return render(request, "accounts/signup.html", {"form": form})
 
+# ログイン
 def login_view(request):
     if request.method == "POST":
-        form = EmailLoginForm(request.POST, request=request) # requestを渡す
+        form = EmailLoginForm(request.POST, request=request)
         if form.is_valid():
             user = form.get_user()
             auth_login(request, user)
@@ -82,55 +67,45 @@ def login_view(request):
         form = EmailLoginForm()
     return render(request, "accounts/login.html", {"form": form})
 
-#メアド入力、メール送信
+# パスワードリセット申請（メール送信）
 def password_reset_request(request):
-
+    reset_link = None
     if request.method == "POST":
         email = request.POST.get("email")
-
         try:
             user = User.objects.get(email=email)
             reset = PasswordReset.objects.create(
-                user = user,
-                password_expiry = timezone.now() + timedelta(hours = 24)
+                user=user,
+                password_expiry=timezone.now() + timedelta(hours=24)
             )
+            # 本番用
+            # reset_link = f"https://kotobatrace.pythonanywhere.com/accounts/reset/{reset.password_token}/"
 
-            reset_link = f"https://kotobatrace.pythonanywhere.com/accounts/reset/{reset.password_token}/"
-
+            reset_link = f"http://127.0.0.1:8000/accounts/reset/{reset.password_token}/"
+            
             send_mail(
                 "パスワード再設定のご案内",
-                f"""このメールはパスワードをリセットされたお客様に自動送信されています。
-以下のURLをクリックし、24時間以内にパスワード再設定手続きにお進みください。
-
-{reset_link}
-
-※このメールに心当たりがない場合は破棄してください。
-""",
-            None,
-            [email],
-        )
+                f"以下のURLをクリックし、手続きに進んでください。\n\n{reset_link}",
+                None,
+                [email],
+            )
         except User.DoesNotExist:
-            pass  # 存在しなくても何もせず「送信しました」画面にする
+            # ユーザーがいない場合も、reset_link は None のまま次へ進む
+            pass
 
-        # POSTなら送信しました画面に飛ばす
-        return render(request, "accounts/password_reset_sent.html")
+        return render(request, "accounts/password_reset_sent.html", {"reset_link": reset_link})
 
-    # GETのときはメール入力フォームを表示
-    return render(request, "accounts/password_reset_request.html") 
-    
-    
-    
-def password_reset_confirm(request,token):
+
+    return render(request, "accounts/password_reset_request.html")
+# パスワード再設定画面（URLから飛んでくる場所）
+def password_reset_confirm(request, token):
     try:
-        reset = PasswordReset.objects.get(password_token=token)
+        reset = PasswordReset.objects.get(password_token=str(token))
     except PasswordReset.DoesNotExist:
         return render(request, "accounts/invalid_link.html")
     
-    #期限チェック
     if reset.password_expiry < timezone.now():
         return render(request, "accounts/expired.html")
-    
-    #使用済みチェック
     if reset.is_used:
         return render(request, "accounts/used.html")
     
@@ -138,78 +113,55 @@ def password_reset_confirm(request,token):
         password = request.POST.get("password")
         password_confirm = request.POST.get("password_confirm")
 
-        #パスワード一致チェック
         if password != password_confirm:
-            return render(
-                request,
-                "accounts/password_reset_confirm.html",
-                {"error":"パスワードが一致しません"}
-            )
+            return render(request, "accounts/password_reset_confirm.html", {"error": "パスワードが一致しません"})
+            
         try:
             validate_password(password, user=reset.user)
         except ValidationError as e:
-            return render(
-                 request,
-                "accounts/password_reset_confirm.html",
-                {"error": e.messages[0]}
-            )
-           
-        #パスワード変更、
+            return render(request, "accounts/password_reset_confirm.html", {"error": e.messages[0]})
+            
         user = reset.user
         user.set_password(password)
         user.save()
-
         reset.is_used = True
         reset.save()
-
         return redirect("accounts:password_reset_complete")
     
     return render(request, "accounts/password_reset_confirm.html")
 
-#設定画面
+# 設定・変更系
 @login_required
 def settings_view(request):
-    return render(request,"accounts/settings.html")
+    return render(request, "accounts/settings.html")
 
-#メアド変更（設定画面）
 @login_required
 def email_change(request):
     if request.method == "POST":
         form = EmailChangeForm(request.POST)
-
         if form.is_valid():
             email = form.cleaned_data["email"]
-
             if User.objects.filter(email=email).exclude(id=request.user.id).exists():
-                messages.error(request,"このメールアドレスは既に登録されています")
+                messages.error(request, "このメールアドレスは既に登録されています")
                 return redirect("accounts:email_change")
-            
             request.user.email = email
             request.user.save()
-
             messages.success(request, "メールアドレスの変更が完了しました!")
             return redirect("accounts:settings")
-
     else:
         form = EmailChangeForm()
-    
     return render(request, "accounts/email_change.html", {"form": form})
-
 
 class EmailChangeForm(forms.Form):
     email = forms.EmailField(required=True)
 
-
-# パスワード変更
 class MyPasswordChangeView(PasswordChangeView):
     template_name = "accounts/password_change.html"
-    success_url = reverse_lazy("accounts:settings")  
+    success_url = reverse_lazy("accounts:settings")
     form_class = MyPasswordChangeForm
-
     def form_valid(self, form):
         messages.success(self.request, "パスワードの変更が完了しました!")
         return super().form_valid(form)
 
-#パスワード変更完了
 def password_reset_complete(request):
     return render(request, "accounts/password_reset_complete.html")
