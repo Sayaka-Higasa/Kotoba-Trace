@@ -1,3 +1,4 @@
+import unicodedata
 from django.shortcuts import render
 from django.db.models import Q
 from words.models import Word
@@ -22,11 +23,14 @@ def index(request):
 
 # 検索結果ページ
 def results(request):
-    query = request.GET.get('q', '').strip()
+    raw_query = request.GET.get('q', '').strip()
     words = Word.objects.none()
+    display_query = raw_query
 
-    if query:
-        clean_query = query.lstrip('#')
+    if  raw_query:
+        normalized_query = unicodedata.normalize('NFKC', raw_query).replace('　', ' ')
+        display_query = normalized_query
+        clean_query = normalized_query.lstrip('#')
         words= Word.objects.filter(
             Q(tags__name__icontains=clean_query) |      
             Q(content__icontains=clean_query) |         
@@ -38,9 +42,8 @@ def results(request):
         #公開されてるものだけ
         words = words.filter(is_public=True).order_by("-created_at")
 
-    return render(request, 'search/results.html', {'words': words, 'query': query})
-
         #自分の投稿は表示されない
         # if request.user.is_authenticated:
         #     words = words.exclude(user=request.user)
+    return render(request, 'search/results.html', {'words': words, 'query':  display_query})
 
