@@ -1,3 +1,4 @@
+import unicodedata
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Word, Tag
 from .forms import WordForm
@@ -35,8 +36,10 @@ def word_record(request):
             # タグ処理
             tags_text = request.POST.get("tags", "")
             if tags_text:
-                for tag_name in tags_text.split():
-                    clean_name = tag_name.lstrip('#')
+                normalized = unicodedata.normalize('NFKC', tags_text).replace('　', ' ')
+                prepared_text = normalized.replace('#', ' #')
+                for tag_name in prepared_text.split():
+                    clean_name = tag_name.lstrip('#＃')
                     if clean_name:
                         tag, _ = Tag.objects.get_or_create(name=clean_name)
                         word.tags.add(tag)
@@ -70,11 +73,12 @@ def word_edit(request, word_id):
             
             # タグの更新処理
             tags_text = request.POST.get("tags", "")
-            tag_names = tags_text.split()
+            normalized_tags = unicodedata.normalize('NFKC', tags_text).replace('　', ' ')
+            tag_names = normalized_tags.split()
 
             word.tags.clear() # 一旦リセット
             for name in tag_names:
-                clean_name = name.lstrip('#')
+                clean_name = name.lstrip('#＃')
                 if clean_name:
                     tag, _ = Tag.objects.get_or_create(name=clean_name)
                     word.tags.add(tag)
