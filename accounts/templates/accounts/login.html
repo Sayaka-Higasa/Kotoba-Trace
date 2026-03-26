@@ -9,12 +9,12 @@
         width: 92%;
         max-width: 31.25rem;
         margin: 0 auto;
-        text-align: center;
+        text-align: left;
     }
 
     .form-group {
         margin-bottom: 1.5rem;
-        text-align: center;
+        text-align: left;
     }
 
     .form-label {
@@ -37,7 +37,7 @@
     /* 入力欄（form-input） */
     input[type="email"],
     input[type="password"] {
-        width: 100%;
+        width: 100% !important;
         box-sizing: border-box;
         padding: 0.75rem;
         font-size: 1rem;
@@ -54,13 +54,20 @@
         list-style: none;
         padding: 0;
         margin: 0.5rem 0 0 0;
-        text-align: center;
+        text-align: left;
     }
 
     .errorlist li {
         color: #b91c1c; 
         font-weight: bold;
         font-size: 0.875rem;
+    }
+
+    .login-btn {
+        width: 100% !important;
+        display: block;
+        padding: 0.75rem;
+        font-weight: bold;
     }
 
     .link-group {
@@ -80,8 +87,8 @@
 <div class="form-container">
     
     <div class="login-title">
-        <h3>ことばを記録するには</h3>
-        <h3>ログインが必要です</h3>
+        <h4>ことばを記録するには</h4>
+        <h4>ログインが必要です</h4>
     </div>
 
     <form method="post" novalidate>
@@ -119,8 +126,8 @@
             </ul>
         {% endif %}
 
-        <div style="text-align: center; margin-top: 2rem;">
-            <button type="submit" class="btn btn-primary" style="padding: 0.6rem 2rem;">
+        <div style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary login-btn">
                 ログイン
             </button> 
         </div>
