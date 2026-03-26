@@ -38,8 +38,9 @@
     }
 
     .form-input {
-        width: 100%;
-        box-sizing: border-box;
+        display: block;      /* ブロック要素にする */
+        width: 100% !important; /* 親の幅いっぱいに強制 */
+        box-sizing: border-box; /* パディングを含めて100%にする */
         padding: 0.75rem;
         font-size: 1rem;
         border: 1px solid #ddd;
@@ -57,10 +58,8 @@
     }
 
     .save-btn {
-        display: inline-block;
-        min-width: 7rem;      
-        padding: 0.6rem 1.5rem;
-        font-size: 0.9375rem; 
+        width: 100%;
+        display: block;
     }
 
     /* メッセージ用 */
@@ -83,7 +82,6 @@
     margin-top: 0.25rem;
     font-size: 0.875rem;
 }
-
 </style>
 {% endblock %}
 
