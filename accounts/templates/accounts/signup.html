@@ -1,86 +1,157 @@
 {% extends "base.html" %}
 
+{% block title %}新規登録{% endblock %}
+
 {% block extra_css %}
 <style>
-.alert-message {
-    background: #fee;
-    color: #b91c1c;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+
+.form-container {
+    width: 92%;
+    max-width: 31.25rem; 
+    margin: 2rem auto 0 auto; 
+    text-align: left;
 }
 
-.errorlist {
-    list-style: none;
-    padding: 0;
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100% !important;
+    box-sizing: border-box;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    color: #333;
+    background-color: #fff;
+    display: block;
     margin: 0;
 }
 
-input {
-  height: 48px;
-  width: 80%;
-  max-width: 400px;
-  padding: 8px;
-  font-size: 16px;
-  margin-top: 8px;
+.errorlist {
+list-style: none;
+padding: 0;
+margin: 0.5rem 0 0 0;
 }
+.errorlist li {
+color: #b91c1c;
+font-weight: bold;
+font-size: 0.875rem;
+}
+
+.register-btn {
+    width: 100% !important;
+    display: block;
+    padding: 0.75rem;
+    font-weight: bold;
+}
+
+.register-title {
+    text-align: center;
+    color: #4b5563;
+    margin-bottom: 2rem;
+    font-size: 1.25rem;
+}
+
+.link-group {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+.link-group a {
+    font-size: 0.875rem;
+    text-decoration: underline;
+}
+.link-group a.register-link {
+    color: #55d383;
+    font-weight: bold;
+    text-decoration: none;
+}
+
 
 </style>
 {% endblock %}
 
-{% block title %}新規登録{% endblock %}
-
 {% block content %}
+<div class="form-container">
 
-<div style="text-align: center; margin-top: 2rem;">
+    <div class="register-title">
+        <h4>アカウントを作成する</h4>
+    </div>
 
     <form method="post" novalidate>
         {% csrf_token %}
-        {% if form.errors %}
-            <div class = "alert-message">
-                {{ form.non_field_errors }}
-                {{ form.name.errors }}
-                {{ form.email.errors }}
-                {{ form.password1.errors }}
-                {{ form.password2.errors }}
-            </div>
+
+        <div class="form-group">
+            <label class="form-label" for="id_name">ユーザー名</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <ul class="errorlist">
+                    {% for error in form.name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+       <div class="form-group">
+            <label class="form-label" for="id_email">メールアドレス</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <ul class="errorlist">
+                    {% for error in form.email.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_password1">パスワード<br>(10文字以上、英数字を含む)</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <ul class="errorlist">
+                    {% for error in form.password1.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+
+        <div class="form-group">
+            <label class="form-label" for="id_password2">パスワード再入力</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <ul class="errorlist">
+                    {% for error in form.password2.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+
+        {% if form.non_field_errors %}
+            <ul class="errorlist" style="text-align: left; margin-bottom: 1rem;">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
         {% endif %}
 
-    <p>
-    <label for="id_name">ユーザー名</label><br>
-    {{form.name}}
-    </p>
-
-    <p>
-    <label for="id_email">メールアドレス</label><br>
-    {{form.email}}
-    </p>
-
-    <p>
-    <label for="id_password1">パスワード<br>(10文字以上、英数字を含む)</label>
-    <br>
-    {{form.password1}}
-    </p>
-
-    <p>
-    <label for="id_password2">パスワード再入力</label><br>
-    {{form.password2}}
-    </p>
-
-    <p>
-    <button type="submit" class="btn btn-primary" style="font-size: 0.9rem;">
-        登録
-    </button>
-    </p>
+        <div style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary register-btn">
+                登録
+            </button>
+        </div>
     <br>
 
-    <a href="{% url 'accounts:login' %}">
-        ログイン画面へ戻る
-    </a>
-
+        <div class="link-group">
+            <p><a href="{% url 'accounts:login' %}">ログイン画面へ戻る</a></p>
+        </div>
     </form>
-
 </div>
-
-
 {% endblock %}
