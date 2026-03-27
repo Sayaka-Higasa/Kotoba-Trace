@@ -127,8 +127,7 @@
 {% block content %}
 <div class="list-container">
     
-    <p class="count-text">現在の登録件数: {{ page_obj.paginator.count }}</p>
-
+    <p class="count-text">現在の登録件数: {{ page_obj.paginator.count|default:0 }}件</p>
     <main>
         {% for word in page_obj %}
         <a href="/words/{{ word.id }}" class="word_card_link" style="text-decoration: none; color: inherit; display: block;">
