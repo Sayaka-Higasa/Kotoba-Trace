@@ -1,7 +1,9 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ポートフォリオ</title>
     <style>
         body {
@@ -12,13 +14,13 @@
             padding: 0;
         }
         header {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #fefce8;
+            color: #333;
             padding: 1rem;
             text-align: center;
         }
         main {
-            padding: 2rem;
+            padding: 1rem;
             max-width: 800px;
             margin: 0 auto;
         }
@@ -32,31 +34,104 @@
         .card h2 {
             margin-top: 0;
         }
+
+        .app-images {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin-top: 16px;
+        }
+
+        .app-images img {
+            width: 90%;
+            max-width: 400px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border-radius: 12px;
+        }
+
+        
+    .docs-links {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 横2列 */
+        gap: 12px; /* ボタン同士の隙間 */
+        margin-top: 24px;
+    }
+
+
+    .docs-links a {
+        text-align: center;
+        padding: 8px; /* 小さめに調整 */
+        background-color: #fefce8;
+        color: #333;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        border: 1px solid #ddd;
+        font-size: 0.9rem; /* 小さめ */
+    }
+    
+    .docs-links a:hover {
+        background-color: #fef9c3;
+    }
+    
     </style>
 </head>
 <body>
     <header>
-        <h1>私のポートフォリオ</h1>
+        <h1>Kotoba Trace</h1>
     </header>
     <main>
-        <div class="card">
-            <h2>作品1</h2>
-            <p>ここに作品の説明を書きます。</p>
-        </div>
-        <div class="card">
-            <h2>作品2</h2>
-            <p>ここに作品の説明を書きます。</p>
-        </div>
-        <div class="card">
-            <h2>作品3</h2>
-            <p>ここに作品の説明を書きます。</p>
-        </div>
+        <p>Kotoba Traceは本や音楽、日常の中で出会った大切な言葉を記録し、
+            新たな作品との出会いを作るアプリです。<br>
+            公開設定が選べる記録機能、検索機能、記録した言葉の一覧表示を提供し
+            「新しい言葉との出会い」をきっかけに作品への興味が広がる体験を支援します。
+        </p>
+
+    <div class="app-images">
+        <img src="{% static 'images/img_6043.png' %}" alt="検索画面">
+        <img src="{% static 'images/img_6038.png' %}" alt="一覧画面">
+        <img src="{% static 'images/img_6044.png' %}" alt="詳細画面">
+    </div>
+    <br><br>
+
+<div class="docs-links">
+    <a href="{% static 'docs/kikakusho.pdf' %}" target="_blank" rel="noopener noreferrer">
+    企画書
+    </a>
+
+    <a href="{% static 'docs/screen_design.pdf' %}" target="_blank" rel="noopener noreferrer">
+    画面設計図
+    </a>
+
+    <a href="{% static 'docs/screen_flow.svg' %}" target="_blank" rel="noopener noreferrer">
+    画面遷移図
+    </a>
+
+    <a href="{% static 'docs/er_diagram.svg' %}" target="_blank" rel="noopener noreferrer">
+    ER図
+    </a>
+</div>
+    
+    
+
+
+
+
+
+
+
+
+
+
+
 
           <!-- ここから検索画面ボタン -->
     <div style="text-align:center; margin-top:2rem;">
         <a href="{% url 'search:index' %}" 
            style="display:inline-block; padding:1rem 2rem; background-color:#4CAF50; color:white; border-radius:8px; text-decoration:none; font-weight:bold;">
-           検索画面へ
+           アプリへ
         </a>
     </div>
 </main>
