@@ -20,7 +20,7 @@
     </nav>
 {% else %}
     <div style="text-align:center; margin-top:20px;">
-        <a href="{% url 'accounts:login' %}" class="btn btn-primary">ログイン</a>
+       <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn btn-primary">ログイン</a>
         <p>ログインすると<br>ことばを記録できます</p>
     </div>
 {% endif %}
