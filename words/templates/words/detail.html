@@ -113,8 +113,10 @@
         <h3>著者・アーティスト</h3>
         <p>{{ word.source_creator|default:"---" }}</p>
 
-        <h3>メモ</h3>
-        <p style="color: #6b7280; font-size: 0.9375rem;">{{ word.memo|default:"（メモなし）" }}</p>
+        {% if word.user == user %}
+            <h3>メモ</h3>
+            <p style="color: #6b7280; font-size: 0.9375rem;">{{ word.memo|default:"（メモなし）" }}</p>
+        {% endif %}
 
         <h3>タグ</h3>
         <div>
