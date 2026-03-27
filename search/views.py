@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from words.models import Word
 import random
+from django.core.paginator import Paginator
 
 # 検索ページ（検索窓 + ランダムカード2件表示）
 def index(request):
@@ -41,9 +42,15 @@ def results(request):
 
         #公開されてるものだけ
         words = words.filter(is_public=True).order_by("-created_at")
+    paginator = Paginator(words, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
         #自分の投稿は表示されない
         # if request.user.is_authenticated:
         #     words = words.exclude(user=request.user)
-    return render(request, 'search/results.html', {'words': words, 'query':  display_query})
+    return render(request, 'search/results.html', {
+        'page_obj': page_obj,
+        'query': display_query
+    })
 
