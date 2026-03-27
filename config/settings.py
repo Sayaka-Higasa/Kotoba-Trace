@@ -164,13 +164,15 @@ except ImportError:
     pass
 
 
-# 既存の try...except の後、一番最後に追記
+
 if not DEBUG:
     # 本番環境（PythonAnywhere）での設定
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_HTTP_PROTOCOL = 'https' # リンクを https に強制する
+    DEFAULT_HTTP_PROTOCOL = 'https' 
+
+    ALLOWED_HOSTS = ['kotobatrace.pythonanywhere.com']
+    MY_SITE_DOMAIN = 'kotobatrace.pythonanywhere.com'
 else:
-    # 開発環境（自分のPC）での設定（もし必要なら）
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
