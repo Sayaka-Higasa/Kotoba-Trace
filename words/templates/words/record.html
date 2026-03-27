@@ -74,7 +74,7 @@
 
         <div class="form-group">
             <label class="form-label">記録することば <span style="color:#b91c1c;">*</span></label>
-            <textarea name="content" class="form-input" style="height:120px;">{{ form.content.value }}</textarea>
+            <textarea name="content" class="form-input" style="height:120px;">{{ form.content.value | default:""}}</textarea>
             {% if form.content.errors %}
                 <ul class="errorlist">
                     {% for error in form.content.errors %}
@@ -86,7 +86,7 @@
 
         <div class="form-group">
             <label class="form-label">出典 (本・音楽・日常 など) <span style="color:#b91c1c;">*</span></label>
-            <input type="text" name="source_type" class="form-input" value="{{ form.source_type.value }}">
+            <input type="text" name="source_type" class="form-input" value="{{ form.source_type.value |default:"" }}">
             {% if form.source_type.errors %}
                 <ul class="errorlist">
                     {% for error in form.source_type.errors %}
