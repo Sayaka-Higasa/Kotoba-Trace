@@ -119,7 +119,7 @@
         <h3>タグ</h3>
         <div>
             {% for tag in word.tags.all %}
-                <a href="{% url 'search:results' %}?q=%23{{ tag.name|cut:'#'}}" class="tag-link">
+                <a href="{% url 'search:results' %}?q={{ tag.name|cut:'#'}}" class="tag-link">
                     #{{ tag.name|cut:"#" }}
                 </a>
             {% empty %}
