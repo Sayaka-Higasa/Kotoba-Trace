@@ -131,10 +131,10 @@
             
             <div class="tag-container">
                 {% for tag in word.tags.all %}
-                    <a href="{% url 'search:results' %}?query=%23{{ tag.name|cut:"#" }}"
+                    <a href="{% url 'search:results' %}?q={{ tag.name|cut:"#" }}"
                         class="tag-item"
                         onclick="event.stopPropagation()">
-                        #{{ tag.name }}
+                        #{{ tag.name|cut:"#" }}
                     </a>
                 {% endfor %}
             </div>
