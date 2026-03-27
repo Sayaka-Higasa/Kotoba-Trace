@@ -1,0 +1,43 @@
+
+/* 枠線と角丸く*/
+.word_card { 
+    border: 1px solid black;
+    border-radius: 12px ;
+   
+    /* 文字と枠の隙間 */
+    padding: 20px;
+
+}
+
+/* ボタンの余白 */
+.actions{
+    display: flex;
+    /* ボタンを両端に寄せる */
+    justify-content: space-between;
+    margin-bottom: 20x 0;
+}
+
+/* ボタンデザイン(共通) */
+.button_back, .button_edit{
+    display: inline-block;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    color: #FFF;
+    border-radius: 3px;
+    
+    /* リンク下線消す */
+    text-decoration: none;
+
+}
+
+/* 戻るボタン色変更 */ 
+.button_back{
+    background-color:#6c757d;
+    border-bottom: solid 4px #5a6268;
+}
+
+/* 編集ボタン色変更 */
+.button_edit{
+    background-color:#7fd49a;
+    border-bottom: solid 4px #61a476; 
+}
