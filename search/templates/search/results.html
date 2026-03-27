@@ -20,16 +20,18 @@
     {% comment %} カード本体  {% endcomment %}
     .word-card {
         background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 0.75rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 1rem;
         padding: 0.75rem 1rem;
         display: block;
         color: #000;                     
-        transition: transform 0.15s, box-shadow 0.15s;
+        transition: transform 0.2s, box-shadow 0.15s;
         cursor: pointer;
         position: relative;
         text-align: left !important;
         width: 100%;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        padding-right: 3rem;
     }
 
         .word-card:active {
@@ -48,6 +50,16 @@
     transform: scale(0.98);
     box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
+
+.word-card::after {
+        content: "〉";
+        position: absolute;
+        right: 1.25rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #d1d5db;
+        font-size: 0.9rem;
+    }
     
 
     {% comment %} /本文のスタイル  {% endcomment %}
@@ -59,6 +71,7 @@
         white-space: pre-wrap;
         text-align: left !important;
         display: block;
+        padding-right: 1.5rem;
     }
 
     .word-content p {
