@@ -31,6 +31,14 @@ def word_record(request):
         if form.is_valid():
             word = form.save(commit=False)
             word.user = request.user
+           
+            if word.content:
+                word.content = unicodedata.normalize('NFKC', word.content)
+            if word.source_title:
+                word.source_title = unicodedata.normalize('NFKC', word.source_title)
+            if word.source_creator:
+                word.source_creator = unicodedata.normalize('NFKC', word.source_creator)
+
             word.save()
 
             # タグ処理
@@ -69,7 +77,18 @@ def word_edit(request, word_id):
     if request.method == "POST":
         form = WordForm(request.POST, instance=word)
         if form.is_valid():
-            word = form.save()
+            word = form.save(commit=False)
+
+            if word.content:
+                word.content = unicodedata.normalize('NFKC', word.content)
+            if word.source_title:
+                word.source_title = unicodedata.normalize('NFKC', word.source_title)
+            if word.source_creator:
+                word.source_creator = unicodedata.normalize('NFKC', word.source_creator)
+
+            word.save()
+
+
             
             # タグの更新処理
             tags_text = request.POST.get("tags", "")
