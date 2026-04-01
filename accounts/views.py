@@ -79,16 +79,20 @@ def password_reset_request(request):
                 password_expiry=timezone.now() + timedelta(hours=24)
             )
             # 本番用
-            # reset_link = f"https://kotobatrace.pythonanywhere.com/accounts/reset/{reset.password_token}/"
+            reset_link = f"https://kotobatrace.pythonanywhere.com/accounts/reset/{reset.password_token}/"
 
-            reset_link = f"http://127.0.0.1:8000/accounts/reset/{reset.password_token}/"
+            # reset_link = f"http://127.0.0.1:8000/accounts/reset/{reset.password_token}/"
+            
+            mail_subject= "【Kotoba Trace】パスワード再設定のご案内"
+            mail_body = f"{user.username} 様\n\n以下のURLをクリックし、手続きに進んでください。\n\n{reset_link}"
             
             send_mail(
-                "パスワード再設定のご案内",
-                f"以下のURLをクリックし、手続きに進んでください。\n\n{reset_link}",
+                mail_subject,
+                mail_body,
                 None,
                 [email],
             )
+        
         except User.DoesNotExist:
             # ユーザーがいない場合も、reset_link は None のまま次へ進む
             pass
