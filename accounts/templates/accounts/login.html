@@ -80,6 +80,27 @@
         color: #6b7280;
         text-decoration: underline;
     }
+
+/* アカウント登録 */
+.link-group a.signup-link {
+    color: #41ba78;
+    font-weight: bold;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+.link-group a.signup-link:hover {
+    color: #339966;
+}
+
+/* パスワードリセット */
+.link-group a.password-reset-link {
+    color: #6b7280;
+    text-decoration: underline;
+}
+.link-group a.password-reset-link:hover {
+    color: #4b5563;
+}
+
 </style>
 {% endblock %}
 
@@ -133,9 +154,9 @@
         </div>
 
         <div class="link-group">
-            <p><a href="{% url 'accounts:password_reset' %}">パスワードを忘れた方はこちら</a></p>
+            <p><a href="{% url 'accounts:password_reset' %}" class="password-reset-link">パスワードを忘れた方はこちら</a></p>
             <p style="margin-top: 1rem;">
-                <a href="{% url 'accounts:signup' %}" style="color: #55d383; font-weight: bold;">アカウント登録</a>
+                <a href="{% url 'accounts:signup' %}" class="signup-link">アカウント登録</a>
             </p>
         </div>
     </form>
