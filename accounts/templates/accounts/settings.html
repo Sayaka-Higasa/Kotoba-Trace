@@ -72,6 +72,21 @@
     flex: 1;
     text-align: left;
 }
+
+/* ブラウザが勝手に付けたリンク（特にメールアドレス）の見た目を無効化 */
+a[href^="mailto:"] {
+    color: inherit !important;
+    text-decoration: none !important;
+    pointer-events: none !important;
+}
+
+.email-text {
+    flex: 1;
+    text-align: left;
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
 </style>
 {% endblock %}
 
