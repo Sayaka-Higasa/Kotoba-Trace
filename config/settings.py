@@ -158,7 +158,6 @@ SITE_ID = 1
 
 
 if not DEBUG:
-    # 本番環境（PythonAnywhere）での設定
     DEFAULT_HTTP_PROTOCOL = 'https' 
     ALLOWED_HOSTS = ['kotobatrace.pythonanywhere.com']
     MY_SITE_DOMAIN = 'kotobatrace.pythonanywhere.com'
@@ -169,6 +168,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_TIMEOUT = 10
 DEFAULT_FROM_EMAIL = 'Kotoba Trace <ssyk914@gmail.com>'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
