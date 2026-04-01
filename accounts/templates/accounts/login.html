@@ -101,6 +101,19 @@
     color: #4b5563;
 }
 
+.errorlist {
+    text-align: left;
+}
+
+.errorlist li {
+    text-align: left;
+}
+
+.non-field-errors {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
 </style>
 {% endblock %}
 
@@ -140,7 +153,7 @@
         </div>
 
         {% if form.non_field_errors %}
-            <ul class="errorlist" style="text-align: center; margin-bottom: 1rem;">
+            <ul class="errorlist non-field-errors">
                 {% for error in form.non_field_errors %}
                     <li>{{ error }}</li>
                 {% endfor %}
