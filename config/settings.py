@@ -157,22 +157,22 @@ SITE_ID = 1
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
+if not DEBUG:
+    # 本番環境（PythonAnywhere）での設定
+    DEFAULT_HTTP_PROTOCOL = 'https' 
+    ALLOWED_HOSTS = ['kotobatrace.pythonanywhere.com']
+    MY_SITE_DOMAIN = 'kotobatrace.pythonanywhere.com'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Kotoba Trace <ssyk914@gmail.com>>'
+
 
 try:
     from .local_settings import *
 except ImportError:
     pass
-
-
-
-if not DEBUG:
-    # 本番環境（PythonAnywhere）での設定
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_HTTP_PROTOCOL = 'https' 
-
-    ALLOWED_HOSTS = ['kotobatrace.pythonanywhere.com']
-    MY_SITE_DOMAIN = 'kotobatrace.pythonanywhere.com'
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
