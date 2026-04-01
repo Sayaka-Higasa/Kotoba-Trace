@@ -54,6 +54,12 @@
 {% block extra_css %}
 <style>
 
+input[type="search"],
+button[type="submit"] {
+    height: 40px;        /* 両方同じ高さにする */
+    box-sizing: border-box; /* padding込みで高さを正確に */
+}
+
 
 @media (max-width: 768px) {
     input[type="search"],
