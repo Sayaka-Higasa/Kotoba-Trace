@@ -84,7 +84,12 @@ def password_reset_request(request):
             # reset_link = f"http://127.0.0.1:8000/accounts/reset/{reset.password_token}/"
             
             mail_subject= "【Kotoba Trace】パスワード再設定のご案内"
-            mail_body = f"{user.email} 様\n\n以下のURLをクリックし、手続きに進んでください。\n\n{reset_link}"
+            mail_body = f"""このメールはパスワードをリセットされたお客様に自動送信されています。
+            以下のURLをクリックし、24時間以内にパスワード再設定手続きにお進みください。
+
+            {reset_link}
+            
+            ※このメールにお心当たりがないお客様はこのメールを破棄していただくようお願いいたします。"""
             
             send_mail(
                 mail_subject,
