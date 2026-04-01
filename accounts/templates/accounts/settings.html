@@ -67,6 +67,11 @@
     background-color: #dc2626 !important; 
     color: white !important;
 }
+
+.email-text {
+    flex: 1;
+    text-align: left;
+}
 </style>
 {% endblock %}
 
@@ -77,14 +82,14 @@
     <div class="settings-group">
         <div class="settings-label">ユーザー名</div>
         <div class="settings-value">
-            {{ request.user.name }}
-            </div>
+            <span class="email-text">{{ request.user.name }}</span>
+        </div>
     </div>
 
     <div class="settings-group">
         <div class="settings-label">メールアドレス</div>
         <div class="settings-value">
-            {{ request.user.email }}
+            <span class="email-text">{{ request.user.email }}</span>
             <a href="{% url 'accounts:email_change' %}" class="btn btn-secondary">変更</a>
         </div>
     </div>
@@ -92,7 +97,7 @@
     <div class="settings-group">
         <div class="settings-label">パスワード</div>
         <div class="settings-value">
-            ●●●●●●●●●●
+            <span class="email-text">●●●●●●●●●●</span>
             <a href="{% url 'accounts:password_change' %}" class="btn btn-secondary">変更</a>
         </div>
     </div>
