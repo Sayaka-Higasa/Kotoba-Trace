@@ -5,12 +5,15 @@
 <div style="text-align: left; padding: 20px;">
     <h3>キーワードから探す</h3>
 
-    <form method="GET" action="{% url 'search:results' %}">
+    <form method="GET" action="{% url 'search:results' %}" style="display:flex; gap:5px; margin-top:10px;">
         <input type="search" 
                name="q" 
                placeholder="キーワード or #タグ" 
-               style="width:100%; padding:10px; font-size:16px;">
-        <input type="submit" style="display:none;">
+               style="flex:1; padding:10px; font-size:16px;">
+    <button type="submit" 
+            style="padding:10px 20px; font-size:16px; background:#41ba78; color:#fff; border:none; border-radius:5px; cursor:pointer;">
+        🔍 検索
+    </button>
     </form>
 
     {% if random_words %}
