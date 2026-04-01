@@ -28,27 +28,41 @@ def results(request):
     words = Word.objects.none()
     display_query = raw_query
 
-    if  raw_query:
+    if raw_query:
         normalized_query = unicodedata.normalize('NFKC', raw_query).replace('　', ' ')
+        decomposed_query = unicodedata.normalize('NFD', normalized_query)
+        
         display_query = normalized_query
-        clean_query = normalized_query.lstrip('#')
-        words= Word.objects.filter(
-            Q(tags__name__icontains=clean_query) |      
-            Q(content__icontains=clean_query) |         
-            Q(source_type__icontains=clean_query) |    
-            Q(source_title__icontains=clean_query) |   
-            Q(source_creator__icontains=clean_query)   
-        ).distinct()
+        
+        clean_query = normalized_query.lstrip('#').strip()
+        clean_decomposed = decomposed_query.lstrip('#').strip()
 
-        #公開されてるものだけ
-        words = words.filter(is_public=True).order_by("-created_at")
+        if clean_query or clean_decomposed: 
+
+            words = Word.objects.filter(
+
+                Q(tags__name__icontains=clean_query) |      
+                Q(tags__name__icontains=clean_decomposed) | 
+
+                Q(content__icontains=clean_query) |         
+                Q(content__icontains=clean_decomposed) |    
+
+                Q(source_type__icontains=clean_query) |    
+                Q(source_type__icontains=clean_decomposed) |
+
+                Q(source_title__icontains=clean_query) |   
+                Q(source_title__icontains=clean_decomposed) |
+
+                Q(source_creator__icontains=clean_query) | 
+                Q(source_creator__icontains=clean_decomposed)
+            ).distinct()
+
+            words = words.filter(is_public=True).order_by("-created_at")
+
     paginator = Paginator(words, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-        #自分の投稿は表示されない
-        # if request.user.is_authenticated:
-        #     words = words.exclude(user=request.user)
     return render(request, 'search/results.html', {
         'page_obj': page_obj,
         'query': display_query
