@@ -3,10 +3,12 @@ from django.contrib.auth. forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
+from django.contrib.auth.forms import PasswordChangeForm
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
-class SignUpForm(UserCreationForm):
+class SignUpForm(forms.ModelForm):
     name = forms.CharField(label="ユーザー名", max_length=50, required=True)
     email = forms.EmailField(required=True, label="メールアドレス")
     password1 = forms.CharField(
@@ -20,6 +22,17 @@ class SignUpForm(UserCreationForm):
         strip=False,
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Django標準のパスワードチェックを無効化する（自分のcleanメソッドでやるため）
+        if 'password1' in self.fields:
+            self.fields['password1'].validators = []
+        if 'password2' in self.fields:
+            self.fields['password2'].validators = []
+
+    def _post_clean(self):
+        pass
+
     class Meta:
         model = User
         fields = ("name", "email")
@@ -30,22 +43,28 @@ class SignUpForm(UserCreationForm):
             raise forms.ValidationError("このメールアドレスは既に登録されています")
         return email
 
+    def clean_password1(self):
+        p1 = self.cleaned_data.get("password1")
+
+        errors = []
+
+        if p1:
+            # あなたが独自に決めたルールだけを判定
+            if not (any(c.isalpha() for c in p1) and any(c.isdigit() for c in p1)):
+                errors.append("パスワードには英字と数字の両方を含めてください")
+            if len(p1) < 10:
+                errors.append("パスワードは10文字以上で入力してください")
+        if errors:
+            raise forms.ValidationError(errors)
+        return p1
+
     def clean(self):
-        cleaned_data = super().clean()
+        cleaned_data = self.cleaned_data
         p1 = cleaned_data.get("password1")
         p2 = cleaned_data.get("password2")
 
-        if p1:
-            has_letter = any(char.isalpha() for char in p1)
-            has_digit = any(char.isdigit() for char in p1)
-            # 英字と数字両方が揃ってない場合にエラー
-            if not (has_letter and has_digit):
-                raise forms.ValidationError("パスワードには英字と数字の両方を含めてください")
-            if len(p1) < 10:
-                raise forms.ValidationError("パスワードは10文字以上で入力してください")
-
         if p1 and p2 and p1 != p2:
-            raise forms.ValidationError("パスワードが一致しません")
+            self.add_error("password2", "パスワードが一致しません")
 
         return cleaned_data
 
@@ -58,46 +77,47 @@ class SignUpForm(UserCreationForm):
             user.save()
         return user
   
-from django.contrib.auth.forms import PasswordChangeForm
+
 
 class MyPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['new_password1'].validators = []
+        self.fields['new_password2'].validators = []
+
     def clean_new_password1(self):
         p1 = self.cleaned_data.get("new_password1")
+        errors = []
+
         if p1:
-            has_letter = any(c.isalpha() for c in p1)
-            has_digit = any(c.isdigit() for c in p1)
-            if not (has_letter and has_digit):
-                raise forms.ValidationError("パスワードには英字と数字の両方を含めてください")
+            if not any(c.isalpha() for c in p1) or not any(c.isdigit() for c in p1):
+                errors.append("パスワードには英字と数字の両方を含めてください")
             if len(p1) < 10:
-                raise forms.ValidationError("パスワードは10文字以上で入力してください")
+                errors.append("パスワードは10文字以上で入力してください")
+
+        if errors:
+            raise forms.ValidationError(errors)
+
         return p1
 
+    def clean_new_password2(self):
+        p1 = self.cleaned_data.get('new_password1')
+        p2 = self.cleaned_data.get('new_password2')
+        if p1 and p2 and p1 != p2:
+            raise forms.ValidationError(_("パスワードが一致していません。"))
+        return p2
+
 class CustomAuthenticationForm(AuthenticationForm):
-  
+
     def clean(self):
         cleaned_data = super().clean()
-        email = cleaned_data.get('username')  
+        email = cleaned_data.get('username')
         password = cleaned_data.get('password')
 
         if email and password:
-            self.user_cache = authenticate(self.request, username=email, password=password)
-            if self.user_cache is None:
-                self.add_error('username', "メールアドレスまたはパスワードが間違っています")
-                self.add_error('password', "メールアドレスまたはパスワードが間違っています")
+            user = authenticate(self.request, username=email, password=password)
+            if user is None:
+                raise forms.ValidationError("メールアドレスまたはパスワードが間違っています")
 
         return cleaned_data
 
-class LoginForm(AuthenticationForm):
-    userbame = forms.EmailField(
-        label="メールアドレス",
-        widget = forms.EmailInput(attrs={
-            "class": "form-control",
-        })
-    )
-
-    password = forms.CharField(
-        label="パスワード",
-        widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
-        })
-    )
