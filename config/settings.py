@@ -169,8 +169,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'Kotoba Trace <ssyk914@gmail.com>>'
+DEFAULT_FROM_EMAIL = 'Kotoba Trace <ssyk914@gmail.com>'
 
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# # Looking to send emails in production? Check out our Email API/SMTP product!
+# EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+# EMAIL_HOST_USER = 'cee71bdf0e096a'
+# EMAIL_PORT = '2525'
 
 try:
     from .local_settings import *
