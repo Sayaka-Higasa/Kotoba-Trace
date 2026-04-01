@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Word, Tag
 from .forms import WordForm
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 
 # --- 一覧ページ (10個ずつ表示) ---
@@ -52,7 +53,7 @@ def word_record(request):
                         tag, _ = Tag.objects.get_or_create(name=clean_name)
                         word.tags.add(tag)
 
-            success_message = "保存が完了しました！"
+            success_message = "記録が完了しました！"
             form = WordForm()  # 入力クリア
     else:
         form = WordForm()
@@ -102,6 +103,8 @@ def word_edit(request, word_id):
                     tag, _ = Tag.objects.get_or_create(name=clean_name)
                     word.tags.add(tag)
                     
+
+            messages.success(request, "更新しました")
             return redirect("words:word_list")
     else:
         form = WordForm(instance=word)
@@ -121,6 +124,7 @@ def word_delete(request, word_id):
     
     if request.method == "POST":
         word.delete()
+        messages.info(request, "削除しました")
         # 削除が終わったら一覧画面へ戻る
         return redirect("words:word_list")
     
