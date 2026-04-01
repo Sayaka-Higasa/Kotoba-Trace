@@ -54,6 +54,14 @@
 {% block extra_css %}
 <style>
 
+
+@media (max-width: 768px) {
+    input[type="search"],
+    button[type="submit"] {
+        border-radius: 8px; /* 丸みを控えめに */
+    }
+}
+
 .word_card::after {
         content: "〉";
         position: absolute;
