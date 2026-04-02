@@ -124,3 +124,38 @@ class CustomAuthenticationForm(AuthenticationForm):
 
         return cleaned_data
 
+class MySetPasswordForm(forms.Form):
+    password1 = forms.CharField(
+        label="新しいパスワード",
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'autofocus': True}),
+        strip=False,
+    )
+    password2 = forms.CharField(
+        label="新しいパスワード（確認）",
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+        strip=False,
+    )
+
+    def clean_password1(self):
+        p1 = self.cleaned_data.get("password1")
+        errors = []
+        if p1:
+            if not any(c.isalpha() for c in p1):
+                errors.append("パスワードには英字を含めてください")
+            if not any(c.isdigit() for c in p1):
+                errors.append("パスワードには数字を含めてください")
+            if len(p1) < 10:
+                errors.append("パスワードは10文字以上で入力してください")
+        
+        if errors:
+            raise forms.ValidationError(errors)
+        return p1
+
+    def clean(self):
+        cleaned_data = super().clean()
+        p1 = cleaned_data.get("password1")
+        p2 = cleaned_data.get("password2")
+
+        if p1 and p2 and p1 != p2:
+            self.add_error("password2", "パスワードが一致しません")
+        return cleaned_data
