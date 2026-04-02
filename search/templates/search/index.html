@@ -31,20 +31,17 @@
          onclick="location.href='/words/{{ word.id }}'"
          style="background: #fff; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px; position: relative; cursor: pointer;">
         
-        {# 本文はそのまま表示 #}
         <p>{{ word.content | linebreaksbr }}</p>
 
-        {# タグ部分リンク #}
-        <p style="font-size:12px; color:#666; margin-top: 10px;">
-            タグ<br>
+        <div class="tag-container" style="margin-top: 0.75rem;">
             {% for tag in word.tags.all %}
-                <a href="{% url 'search:results' %}?q=%23{{ tag.name|cut:'#' }}" 
-                   class="tag-item"
-                   onclick="event.stopPropagation();">
-                    #{{ tag.name|cut:"#" }}
+                <a href="{% url 'search:results' %}?q={{ tag.name|cut:'#' }}" 
+                    class="tag-item"
+                    onclick="event.stopPropagation();">
+                     #{{ tag.name|cut:"#" }}
                 </a>
             {% endfor %}
-        </p>
+        </div>
     </div>
     {% endfor %}
     </main>
@@ -68,7 +65,7 @@ button[type="submit"] {
 @media (max-width: 768px) {
     input[type="search"],
     button[type="submit"] {
-        border-radius: 8px; /* 丸みを控えめに */
+        border-radius: 8px; 
     }
 }
 
@@ -144,7 +141,6 @@ button[type="submit"] {
 
         if (searchForm && searchBtn) {
             searchForm.addEventListener('submit', function() {
-                // 入力がある場合のみ「検索中...」にする
                 const input = searchForm.querySelector('input[name="q"]');
                 if (input.value.trim() !== "") {
                     searchBtn.innerText = '検索中...';
