@@ -25,13 +25,13 @@
     </p>
     <br><br>
 
-    <main>
+    <main style="max-width: 600px; margin: 0 auto;">
     {% for word in random_words %}
     <div class="word_card" 
-         onclick="location.href='/words/{{ word.id }}'"
-         style="background: #fff; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px; position: relative; cursor: pointer;">
+         onclick="location.href='/words/{{ word.id }}'">
+         
+        <p style="margin: 0;">{{ word.content | linebreaksbr }}</p>
         
-        <p>{{ word.content | linebreaksbr }}</p>
 
         <div class="tag-container" style="margin-top: 0.75rem;">
             {% for tag in word.tags.all %}
@@ -72,7 +72,7 @@ button[type="submit"] {
 .word_card::after {
         content: "〉";
         position: absolute;
-        right: 1.25rem;
+        right: 1.1rem;
         top: 50%;
         transform: translateY(-50%);
         color: #d1d5db; 
@@ -109,14 +109,16 @@ button[type="submit"] {
     background: #fff;
     border: 1.5px solid #e5e7eb;
     transition: transform 0.1s ease, box-shadow 0.2s ease;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-    border-radius: 1rem;
+    border-radius: 0.75rem; 
     padding: 1.25rem;
+    padding-right: 3.5rem; 
     cursor: pointer; 
     display: block;
     position: relative;
     box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-    padding-right: 3rem;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem; 
 }
 
 {% comment %} PC用：hoverで軽く浮かせる {% endcomment %}
