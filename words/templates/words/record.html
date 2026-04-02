@@ -48,18 +48,20 @@
         border-radius: 0.5rem !important;
         border: none !important;
         background-color: #41ba78 !important; /* 保存ボタンは緑 */
-        color: white !important;
+        color: #000 !important;
     }
 
     .errorlist {
-        list-style: none;
-        padding: 0;
-        margin: 0.5rem 0 0 0;
+        list-style: none !important; 
+        padding: 0 !important;       
+        margin: 5px 0 0 0 !important;
     }
+
     .errorlist li {
-        color: #b91c1c;       
-        font-weight: bold;
-        font-size: 0.875rem;  
+        color: #b91c1c !important;   
+        font-weight: bold !important;
+        font-size: 0.8125rem !important;
+        list-style: none !important;  
     }
 </style>
 {% endblock %}
@@ -74,7 +76,7 @@
     </p>
     {% endif %}
 
-    <form method="POST" id="record-form">
+    <form method="POST" id="record-form" novalidate>
         {% csrf_token %}
 
         <div class="form-group">
@@ -151,12 +153,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (form && saveBtn) {
         form.addEventListener('submit', function() {
-            if (form.checkValidity()) {
                 saveBtn.innerText = '保存中...';
                 saveBtn.style.opacity = '0.7';
                 saveBtn.style.pointerEvents = 'none';
                 saveBtn.style.cursor = 'not-allowed';
-            }
         });
     }
 });
