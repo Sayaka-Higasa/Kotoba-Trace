@@ -52,41 +52,33 @@
         font-size: 0.875rem;
     }
 
+    /* モーダル背景 */
     #logoutModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6);
-    z-index: 1000;
-    backdrop-filter: blur(4px);
-}
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+    }
 
+    .no-hover:hover {
+        background-color: #dc2626 !important; 
+        color: white !important;
+    }
 
-.no-hover:hover {
-    background-color: #dc2626 !important; 
-    color: white !important;
-}
+    .email-text {
+        flex: 1;
+        text-align: left;
+    }
 
-.email-text {
-    flex: 1;
-    text-align: left;
-}
-
-/* ブラウザが勝手に付けたリンク（特にメールアドレス）の見た目を無効化 */
-a[href^="mailto:"] {
-    color: inherit !important;
-    text-decoration: none !important;
-    pointer-events: none !important;
-}
-
-.email-text {
-    flex: 1;
-    text-align: left;
-    color: inherit !important;
-    text-decoration: none !important;
-}
-
+    /* ブラウザの自動リンク無効化 */
+    a[href^="mailto:"] {
+        color: inherit !important;
+        text-decoration: none !important;
+        pointer-events: none !important;
+    }
 </style>
 {% endblock %}
 
@@ -118,25 +110,20 @@ a[href^="mailto:"] {
     </div>
 
     <div style="text-align: center; margin-top: 4rem;">
-        <form action="{% url 'accounts:logout' %}" method="post">
-            {% csrf_token %}
-            <button type="button" class="btn btn-danger logout-btn" onclick="openLogoutModal()">
-                ログアウト
-            </button>
-        </form>
+        <button type="button" class="btn btn-danger logout-btn" onclick="openLogoutModal()">
+            ログアウト
+        </button>
     </div>
 </div>
 
-<!-- ログアウト確認モーダル -->
 <div id="logoutModal">
     <div style="background: white; width: 85%; max-width: 320px; margin: 25vh auto; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
         <p style="font-weight: bold; font-size: 18px; margin-bottom: 10px; color: #1f2937;">本当にログアウトしますか？</p>
         <p style="color: #6b7280; font-size: 14px; margin-bottom: 25px;">再ログインは可能ですが、作業途中の場合は注意してください。</p>
         
-        
-         <form action="{% url 'accounts:logout' %}" method="post">
+        <form action="{% url 'accounts:logout' %}" method="post" id="logout-form">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger no-hover" style="width: 100%; padding: 12px; font-size: 16px; margin-bottom: 15px;">
+            <button type="submit" id="logout-confirm-btn" class="btn btn-danger no-hover" style="width: 100%; padding: 12px; font-size: 16px; margin-bottom: 15px;">
                 ログアウトする
             </button>
         </form>
@@ -149,22 +136,35 @@ a[href^="mailto:"] {
 {% include "nav.html" %}
 
 <script>
-const logoutModal = document.getElementById('logoutModal');
+    const logoutModal = document.getElementById('logoutModal');
 
-function openLogoutModal() {
-    logoutModal.style.display = 'block';
-}
-
-function closeLogoutModal() {
-    logoutModal.style.display = 'none';
-}
-
-
-window.onclick = function(event) {
-    if (event.target == logoutModal) {
-        closeLogoutModal();
+    function openLogoutModal() {
+        logoutModal.style.display = 'block';
     }
-}
-</script>
 
+    function closeLogoutModal() {
+        logoutModal.style.display = 'none';
+    }
+
+    // モーダルの外側をクリックしたら閉じる
+    window.onclick = function(event) {
+        if (event.target == logoutModal) {
+            closeLogoutModal();
+        }
+    }
+
+    // ログアウト中...の演出
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoutBtn = document.getElementById('logout-confirm-btn');
+        const logoutForm = document.getElementById('logout-form');
+
+        if (logoutForm && logoutBtn) {
+            logoutForm.addEventListener('submit', function() {
+                logoutBtn.innerText = 'ログアウト中...';
+                logoutBtn.style.opacity = '0.7';
+                logoutBtn.style.pointerEvents = 'none';
+            });
+        }
+    });
+</script>
 {% endblock %}
