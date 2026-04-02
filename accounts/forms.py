@@ -13,7 +13,7 @@ class SignUpForm(forms.ModelForm):
     email = forms.EmailField(required=True, label="メールアドレス")
     password1 = forms.CharField(
         label="パスワード",
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(attrs={'placeholder': '英数字混合10文字以上'}),
         strip=False
     )
     password2 = forms.CharField(
@@ -45,19 +45,18 @@ class SignUpForm(forms.ModelForm):
 
     def clean_password1(self):
         p1 = self.cleaned_data.get("password1")
-
         errors = []
-
         if p1:
-            # あなたが独自に決めたルールだけを判定
-            if not (any(c.isalpha() for c in p1) and any(c.isdigit() for c in p1)):
-                errors.append("パスワードには英字と数字の両方を含めてください")
+            if not any(c.isalpha() for c in p1):
+                errors.append("パスワードには英字を含めてください")
+            if not any(c.isdigit() for c in p1):
+                errors.append("パスワードには数字を含めてください")
             if len(p1) < 10:
                 errors.append("パスワードは10文字以上で入力してください")
+        
         if errors:
             raise forms.ValidationError(errors)
         return p1
-
     def clean(self):
         cleaned_data = self.cleaned_data
         p1 = cleaned_data.get("password1")
@@ -108,6 +107,10 @@ class MyPasswordChangeForm(PasswordChangeForm):
         return p2
 
 class CustomAuthenticationForm(AuthenticationForm):
+    username = forms.EmailField(
+        label="メールアドレス",
+        widget=forms.EmailInput(attrs={'autofocus': True})
+    )
 
     def clean(self):
         cleaned_data = super().clean()
