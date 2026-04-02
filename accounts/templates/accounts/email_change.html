@@ -128,7 +128,9 @@
                    enterkeyhint="done" 
                    autocorrect="off" 
                    autocapitalize="off" 
-                   required>    
+                   inputmode="email"
+                   autocomplete="email" 
+                   required>
 
             {% if form.email.errors %}
                 <ul class="errorlist">
@@ -155,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveBtn = document.querySelector('.save-btn');
     const emailInput = document.querySelector('input[name="email"]');
 
-
     if (emailInput) {
         setTimeout(() => {
             emailInput.focus();
@@ -164,18 +165,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (form && saveBtn) {
         form.addEventListener('submit', function(e) {
-            if (form.reportValidity()) { 
+            if (emailInput.value.trim() !== "") { 
                 saveBtn.disabled = true;
                 saveBtn.innerText = '変更中...';
                 saveBtn.style.opacity = '0.7';
                 saveBtn.style.cursor = 'not-allowed';
             } else {
-                
                 e.preventDefault();
+                alert("新しいメールアドレスを入力してください"); 
             }
         });
     }
 });
 </script>
-
 {% endblock %}
