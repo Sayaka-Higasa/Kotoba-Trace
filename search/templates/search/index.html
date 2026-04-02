@@ -5,13 +5,14 @@
 <div style="text-align: left; padding: 20px;">
     <h3>キーワードから探す</h3>
 
-    <form method="GET" action="{% url 'search:results' %}" style="display:flex; gap:5px; margin-top:10px; max-width:100%;">
+    <form method="GET" action="{% url 'search:results' %}" id="search-form" style="display:flex; gap:5px; margin-top:10px; max-width:100%;">
         <input type="search" 
                name="q" 
                placeholder="キーワード or #タグ" 
                style="flex:1; min-width:0; padding:8px 16px; font-size:15px;">
-    <button type="submit" 
-            style="padding:8px 16px; font-size:15px; background:#41ba78; color:#fff; border:none; border-radius:5px; cursor:pointer;">
+    <button type="submit"
+            id="search-btn"
+            style="padding:8px 16px; font-size:15px; background:#41ba78; color:#000; font-weight:bold; border:none; border-radius:5px; cursor:pointer; min-width: 80px;">
         🔍 検索
     </button>
     </form>
@@ -59,8 +60,8 @@
 
 input[type="search"],
 button[type="submit"] {
-    height: 40px;        /* 両方同じ高さにする */
-    box-sizing: border-box; /* padding込みで高さを正確に */
+    height: 40px;       
+    box-sizing: border-box; 
 }
 
 
@@ -135,4 +136,24 @@ button[type="submit"] {
 
 
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchForm = document.getElementById('search-form');
+        const searchBtn = document.getElementById('search-btn');
+
+        if (searchForm && searchBtn) {
+            searchForm.addEventListener('submit', function() {
+                // 入力がある場合のみ「検索中...」にする
+                const input = searchForm.querySelector('input[name="q"]');
+                if (input.value.trim() !== "") {
+                    searchBtn.innerText = '検索中...';
+                    searchBtn.style.opacity = '0.7';
+                    searchBtn.style.pointerEvents = 'none';
+                }
+            });
+        }
+    });
+</script>
+
 {% endblock %}
