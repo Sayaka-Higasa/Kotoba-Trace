@@ -36,19 +36,21 @@
 
     /* 入力欄（form-input） */
     input[type="email"],
-    input[type="password"] {
+    input[type="password"],
+    input[type="text"] {
         width: 100% !important;
-        box-sizing: border-box;
-        padding: 0.75rem;
-        font-size: 1rem;
-        border: 1px solid #ddd;
-        border-radius: 0.5rem;
-        color: #333;
-        background-color: #fff;
-        display: block;
-        margin: 0;
+        box-sizing: border-box !important;
+        height: 3.25rem !important;        
+        padding: 0 3rem 0 0.75rem !important; 
+        font-size: 16px !important;       
+        line-height: 3.25rem !important;   
+        border: 1px solid #ddd !important;
+        border-radius: 0.5rem !important;
+        display: block !important;
+        background-color: #fff !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
     }
-
     /* エラーリストの赤文字 */
     .errorlist {
         list-style: none;
@@ -81,40 +83,86 @@
         text-decoration: underline;
     }
 
-/* アカウント登録 */
-.link-group a.signup-link {
-    color: #41ba78;
-    font-weight: bold;
-    text-decoration: underline;
-    transition: color 0.2s;
-}
-.link-group a.signup-link:hover {
-    color: #339966;
-}
+    /* アカウント登録 */
+    .link-group a.signup-link {
+        color: #41ba78;
+        font-weight: bold;
+        text-decoration: underline;
+        transition: color 0.2s;
+    }
+    .link-group a.signup-link:hover {
+        color: #339966;
+    }
 
-/* パスワードリセット */
-.link-group a.password-reset-link {
-    color: #6b7280;
-    text-decoration: underline;
-}
-.link-group a.password-reset-link:hover {
-    color: #4b5563;
-}
+    /* パスワードリセット */
+    .link-group a.password-reset-link {
+        color: #6b7280;
+        text-decoration: underline;
+    }
+    .link-group a.password-reset-link:hover {
+        color: #4b5563;
+    }
 
-.errorlist {
-    text-align: left;
-}
+    .errorlist {
+        text-align: left;
+    }
 
-.errorlist li {
-    text-align: left;
-}
+    .errorlist li {
+        text-align: left;
+    }
 
-.non-field-errors {
-    text-align: left;
-    margin-bottom: 1rem;
-}
+    .non-field-errors {
+        text-align: left;
+        margin-bottom: 1rem;
+    }
 
-</style>
+    
+    .form-group {
+        position: relative; 
+    }
+
+    /* 目のマークボタンのスタイル */
+    .password-toggle-btn {
+        position: absolute;
+        right: 0 !important;
+        top: 0 !important;
+        width: 3rem !important;
+        height: 3.25rem !important;        
+        background: none !important;
+        border: none !important;
+        color: #9ca3af;
+        cursor: pointer;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        outline: none !important;
+    }
+
+    .password-toggle-btn:hover {
+        color: #4b5563; 
+    }
+
+    /* 入力欄の右側に余白 */
+    input[name="password"] {
+        padding-right: 2.8rem !important;
+    }
+
+    /* PCブラウザ(Chrome, Edgeなど)標準のパスワード表示ボタンを非表示にする */
+    input::-ms-reveal,
+    input::-ms-clear {
+    display: none;
+    }
+   
+    input::-webkit-contacts-auto-fill-button,
+    input::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute; 
+    right: 0;
+    }
+
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -142,8 +190,11 @@
 
         <div class="form-group">
             <label class="form-label">パスワード</label>
-            {{ form.password }}
-            {% if form.password.errors %}
+            <div style="position: relative;">{{ form.password }}
+            <button type="button" class="password-toggle-btn" id="toggleBtn" tabindex="-1">
+                <span class="material-icons" id="eyeIcon">visibility_off</span>
+            </button>
+            </div>{% if form.password.errors %}
                 <ul class="errorlist">
                     {% for error in form.password.errors %}
                         <li>{{ error }}</li>
@@ -183,6 +234,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (usernameInput) {
         usernameInput.focus();
+    }
+
+    const passwordInput = document.querySelector('input[name="password"]');
+    const toggleBtn = document.getElementById('toggleBtn');
+
+    if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener('click', function() {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            
+            
+            const eyeIcon = document.getElementById('eyeIcon');
+            eyeIcon.innerText = isPassword ? 'visibility' : 'visibility_off';
+            
+            
+            this.style.color = isPassword ? '#3b82f6' : '#9ca3af';
+        });
     }
 
    
