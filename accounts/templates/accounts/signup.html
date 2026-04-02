@@ -64,15 +64,17 @@ font-size: 0.875rem;
 .link-group a {
     font-size: 0.875rem;
     text-decoration: underline;
+    color: #6b7280;
 }
 .link-group a.register-link {
-    color: #41ba78;
+    color: #4b5563;
     font-weight: bold;
     text-decoration: none;
 }
 
 
 </style>
+
 {% endblock %}
 
 {% block content %}
@@ -154,4 +156,26 @@ font-size: 0.875rem;
         </div>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const registerBtn = document.querySelector('.register-btn');
+    const nameInput = document.querySelector('input[name="name"]');
+
+    if (nameInput) {
+        nameInput.focus();
+    }
+
+    form.addEventListener('submit', function() {
+        if (form.checkValidity()) { 
+            registerBtn.disabled = true;
+            registerBtn.innerText = '登録中...';
+            registerBtn.style.opacity = '0.7';
+            registerBtn.style.cursor = 'not-allowed';
+        }
+    });
+});
+</script>
+
 {% endblock %}
