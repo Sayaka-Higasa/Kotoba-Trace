@@ -174,4 +174,26 @@
         </div>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.querySelector('form');
+    const loginBtn = document.querySelector('.login-btn');
+    const usernameInput = document.querySelector('input[name="username"]');
+
+    if (usernameInput) {
+        usernameInput.focus();
+    }
+
+   
+    loginForm.addEventListener('submit', function() {
+        loginBtn.disabled = true;
+        loginBtn.innerText = 'ログイン中...';
+        loginBtn.style.opacity = '0.7';
+        loginBtn.style.cursor = 'not-allowed';
+    });
+});
+
+</script>
+
 {% endblock %}
