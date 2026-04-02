@@ -80,7 +80,9 @@
     }
 
     .word-content p {
-        margin: 0;
+        margin: 0 !important;
+        padding:0 !important;
+        display: block;
     }
 
 
@@ -162,9 +164,7 @@
     {% for word in page_obj %}
     <div style="position: relative; width: 100%; display: flex; justify-content: center;">
         <div class="word-card" onclick="location.href='{% url 'words:word_detail' word.id %}'">
-            <div class="word-content" >
-                <p>{{ word.content }}</p>
-            </div>
+            <div class="word-content" ><p>{{ word.content }}</p></div>
             
             <div class="tag-container">
                 {% for tag in word.tags.all %}
