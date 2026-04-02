@@ -12,6 +12,7 @@ from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from .forms import SignUpForm, MyPasswordChangeForm
+from .forms import MySetPasswordForm
 
 User = get_user_model()
 
@@ -70,8 +71,17 @@ def login_view(request):
 # パスワードリセット申請（メール送信）
 def password_reset_request(request):
     reset_link = None
+    error = None
     if request.method == "POST":
         email = request.POST.get("email")
+        email_field = forms.EmailField()
+        try:
+            email_field.clean(email)
+        except ValidationError:
+            return render(request, "accounts/password_reset_request.html", {
+                "error": "有効なメールアドレスを入力してください"
+            })
+        
         try:
             user = User.objects.get(email=email)
             reset = PasswordReset.objects.create(
@@ -119,24 +129,29 @@ def password_reset_confirm(request, token):
         return render(request, "accounts/used.html")
     
     if request.method == "POST":
-        password = request.POST.get("password")
-        password_confirm = request.POST.get("password_confirm")
-
-        if password != password_confirm:
-            return render(request, "accounts/password_reset_confirm.html", {"error": "パスワードが一致しません"})
+            # 1. 自作フォーム(MySetPasswordForm)にデータを渡す
+            form = MySetPasswordForm(request.POST)
             
-        try:
-            validate_password(password, user=reset.user)
-        except ValidationError as e:
-            return render(request, "accounts/password_reset_confirm.html", {"error": e.messages[0]})
-            
-        user = reset.user
-        user.set_password(password)
-        user.save()
-        reset.is_used = True
-        reset.save()
-        return redirect("accounts:password_reset_complete")
-    
+            # 2. フォームのバリデーション（英数字・10文字チェック）を実行
+            if form.is_valid():
+                user = reset.user
+                # フォームで検証済みの安全なパスワードを取り出す
+                user.set_password(form.cleaned_data["password1"])
+                user.save()
+                
+                reset.is_used = True
+                reset.save()
+                return redirect("accounts:password_reset_complete")
+            else:
+                # 3. エラーがあった場合、最初のエラー内容を1つ取得
+                first_error = None
+                for errors in form.errors.values():
+                    first_error = errors[0]
+                    break
+                
+                # エラーメッセージを error としてテンプレートに返して再表示
+                return render(request, "accounts/password_reset_confirm.html", {"error": first_error})
+        
     return render(request, "accounts/password_reset_confirm.html")
 
 # 設定・変更系
