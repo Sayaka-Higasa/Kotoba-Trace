@@ -122,11 +122,13 @@
         <div class="form-group">
             <label class="form-label">新しいメールアドレス</label>
             <input type="email" 
-                    name="email" 
-                    class="form-input" 
-                    autofocus 
-                    enterkeyhint="done" 
-                    required>
+                   name="email" 
+                   class="form-input" 
+                   autofocus 
+                   enterkeyhint="done" 
+                   autocorrect="off" 
+                   autocapitalize="off" 
+                   required>    
 
             {% if form.email.errors %}
                 <ul class="errorlist">
@@ -153,22 +155,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveBtn = document.querySelector('.save-btn');
     const emailInput = document.querySelector('input[name="email"]');
 
-    // 1. 念のためJSでもカーソルを合わせる（autofocusの補完）
+
     if (emailInput) {
-        emailInput.focus();
+        setTimeout(() => {
+            emailInput.focus();
+        }, 300); 
     }
 
     if (form && saveBtn) {
         form.addEventListener('submit', function(e) {
-            // 2. ブラウザのバリデーションを実行
             if (form.reportValidity()) { 
-                // OKならボタンを固める
                 saveBtn.disabled = true;
                 saveBtn.innerText = '変更中...';
                 saveBtn.style.opacity = '0.7';
                 saveBtn.style.cursor = 'not-allowed';
             } else {
-                // 入力ミスがある場合は送信をキャンセル
+                
                 e.preventDefault();
             }
         });
