@@ -13,7 +13,7 @@ class SignUpForm(forms.ModelForm):
     email = forms.EmailField(required=True, label="メールアドレス")
     password1 = forms.CharField(
         label="パスワード",
-        widget=forms.PasswordInput(attrs={'placeholder': '英数字混合10文字以上'}),
+        widget=forms.PasswordInput,
         strip=False
     )
     password2 = forms.CharField(
